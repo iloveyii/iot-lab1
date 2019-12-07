@@ -1,0 +1,34 @@
+{
+  "name": "task1",
+  "version": "1.0.0",
+  "description": "Turn on/off HS100 using button on Thingy52",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dredd": "^5.2.0",
+    "hs100-api": "^0.19.1",
+    "johnny-five": "^1.0.0",
+    "noble-device": "^1.4.1",
+    "pi-camera": "^1.2.1",
+    "pi-pir-sensor": "0.0.3",
+    "pir": "^0.2.0",
+    "raspi-io": "^9.0.0",
+    "tessel": "^0.3.25"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NordicPlayground/Nordic-Thingy52-Nodejs.git"
+  },
+  "keywords": [
+    "HS100",
+    "Thingy52"
+  ],
+  "author": "Hazrat Ali <iloveyii@yahoo.com>",
+  "license": "ISC"
+}
