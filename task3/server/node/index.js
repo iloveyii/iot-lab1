@@ -23,7 +23,9 @@ let db = null;
 
 function connectMongo() {
     return new Promise(function (resolve, reject) {
-        if(db) { return resolve(db);}
+        if (db) {
+            return resolve(db);
+        }
         console.log(mongo);
         mongoClient.connect(mongo.url, mongo.mongoOptions, (err, client) => {
             if (err) {
@@ -53,21 +55,57 @@ function readData() {
 }
 
 
-
-
-
 function f(d) {
     connectMongo()
         .then(() => readData()
-            .then((data)=> d={}));
+            .then((data) => d = {}));
 }
 
 
 app.get('/api/v1/data', async (req, res) => {
-    connectMongo()
+    await connectMongo()
         .then(() => readData()
-            .then((data)=> res.json(data)));
-} );
+            .then((data) => res.json(data)));
+});
+
+function switchHs100(state) {
+    return new Promise(function (resolve, reject) {
+        resolve(state)
+    })
+}
+
+function switchRadio(state) {
+    return new Promise(function (resolve, reject) {
+        resolve(state)
+    })
+}
+
+function switchLight(state) {
+    return new Promise(function (resolve, reject) {
+        resolve(state)
+    })
+}
+
+app.get('/api/v1/service/:name/:state', async (req, res) => {
+    const {name, state} = req.params;
+    console.log(req.params, name, state);
+    let result;
+    switch (name) {
+        case 'hs100':
+            result = await switchHs100(state);
+            return res.json({state: result});
+            break;
+        case 'radio':
+            result = await switchRadio(state);
+            return res.json({state: result});
+            break;
+        case 'light':
+            result = await switchLight(state);
+            return res.json({state: result});
+            break;
+
+    }
+});
 
 app.listen(5555, () => console.log('Server started on port ' + 5555));
 
