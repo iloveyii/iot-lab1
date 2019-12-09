@@ -7,6 +7,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
+var {startRadio, stopRadio} = require('./radio');
 
 app.use(
     express.static(__dirname + '/public'),
@@ -86,8 +87,9 @@ function switchHs100(state) {
 
 function switchRadio(state) {
     return new Promise(function (resolve, reject) {
-        resolve(state)
-    })
+        state == 'true' ? startRadio(thingy52) : stopRadio(thingy52);
+        resolve(state);
+    });
 }
 
 function switchLight(state) {

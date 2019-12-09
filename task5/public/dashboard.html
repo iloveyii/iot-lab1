@@ -20,6 +20,9 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="demo/demo.css" rel="stylesheet"/>
     <link href="css/button.css" rel="stylesheet"/>
+
+    <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase.js"></script>
+
 </head>
 
 <body class="bg">
@@ -29,7 +32,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="py-5 text-center">
-                        <img class="d-block mx-auto mb-4" src="img/iot.png" alt="" width="140" height="98">
+                        <img class="d-block mx-auto mb-4" src="images/iot.png" alt="" width="140" height="98">
                         <h2>Sensor data - Task 5</h2>
                         <p class="lead">Reading data sensor data from Nordic Thingy52 and showing in real time using
                             firebase</p>
@@ -47,14 +50,14 @@
                                     <i class="material-icons">content_copy</i>
                                 </div>
                                 <p class="card-category">CO2</p>
-                                <h3 class="card-title">49/50
+                                <h3 class="card-title" id="eco2">49/50
                                     <small>GB</small>
                                 </h3>
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
                                     <i class="material-icons text-danger">warning</i>
-                                    <a href="#pablo">Get More Space...</a>
+                                    <a href="#pablo" id="temperature-list">Get More Space...</a>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +69,7 @@
                                     <i class="material-icons">store</i>
                                 </div>
                                 <p class="card-category">TVOC</p>
-                                <h3 class="card-title">$34,245</h3>
+                                <h3 class="card-title" id="tvoc">$34,245</h3>
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
@@ -82,7 +85,7 @@
                                     <i class="material-icons">info_outline</i>
                                 </div>
                                 <p class="card-category">COLOR</p>
-                                <h3 class="card-title">75</h3>
+                                <h3 class="card-title" style="float: right" id="color">75</h3>
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
@@ -98,7 +101,7 @@
                                     <i class="fa fa-twitter"></i>
                                 </div>
                                 <p class="card-category">HEADING</p>
-                                <h3 class="card-title">+245</h3>
+                                <h3 class="card-title" id="heading">+245</h3>
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
@@ -117,7 +120,8 @@
                             <div class="card-body">
                                 <h4 class="card-title">Temperature</h4>
                                 <p class="card-category">
-                                    <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase
+                                    <span class="text-success" id="temperature"><i class="fa fa-long-arrow-up"></i> 55% </span>
+                                    increase
                                     in today sales.</p>
                             </div>
                             <div class="card-footer">
@@ -134,7 +138,7 @@
                             </div>
                             <div class="card-body">
                                 <h4 class="card-title">Humidity</h4>
-                                <p class="card-category">Last Campaign Performance</p>
+                                <p class="card-category" id="humidity">Last Campaign Performance</p>
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
@@ -150,7 +154,7 @@
                             </div>
                             <div class="card-body">
                                 <h4 class="card-title">Pressure</h4>
-                                <p class="card-category">Last Campaign Performance</p>
+                                <p class="card-category" id="pressure">Last Campaign Performance</p>
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
@@ -199,7 +203,9 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="card-body">
-                                                    <h4 class="card-title">Smart Home</h4>
+                                                    <h4 style="text-align: center; color: green;" class="card-title"><i
+                                                            class="fa fa-home" aria-hidden="true"></i>
+                                                        Smart Home</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -249,8 +255,8 @@
                                                             <input class="form-check-input" type="checkbox" value=""
                                                                    checked>
                                                             <span class="form-check-sign">
-                                    <span class="check"></span>
-                                  </span>
+                                                                <span class="check"> </span>
+                                                            </span>
                                                         </label>
                                                     </div>
                                                 </td>
@@ -381,21 +387,21 @@
                         <div class="card">
                             <div class="card-header card-header-warning">
                                 <h4 class="card-title">Latest stats</h4>
-                                <p class="card-category">New employees on 15th September, 2016</p>
+                                <p class="card-category">Updating periodically as new sensor data is read</p>
                             </div>
                             <div class="card-body table-responsive">
                                 <table class="table table-hover">
                                     <thead class="text-warning">
                                     <th>ID</th>
-                                    <th>CO2</th>
-                                    <th>TVOC</th>
-                                    <th>COLOR</th>
-                                    <th>HEADING</th>
-                                    <th>TEMP</th>
-                                    <th>HUMIDITY</th>
-                                    <th>PRESSURE</th>
+                                    <th scope="col">color</th>
+                                    <th scope="col">co2</th>
+                                    <th scope="col">heading</th>
+                                    <th scope="col">humidity</th>
+                                    <th scope="col">pressure</th>
+                                    <th scope="col">temperature</th>
+                                    <th scope="col">tvoc</th>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="data-table">
                                     <tr>
                                         <td>1</td>
                                         <td>Dakota Rice</td>
@@ -468,12 +474,12 @@
     </div>
 </div>
 <!--   Core JS Files   -->
-<script src="js/core/jquery.min.js"></script>
-<script src="js/core/popper.min.js"></script>
-<script src="js/core/bootstrap-material-design.min.js"></script>
-<script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap-material-design.min.js"></script>
+<script src="js/perfect-scrollbar.jquery.min.js"></script>
 <!-- Plugin for the momentJs  -->
-<script src="js/plugins/moment.min.js"></script>
+<script src="js/moment.min.js"></script>
 <!-- Include a polyfill for ES6 Promises (optional) for IE11, UC Browser and Android browser support SweetAlert -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
 <!-- Chartist JS -->
@@ -592,6 +598,10 @@
             console.log(data)
         });
     });
+
+    /*setInterval(() => {
+        document.getElementById('light').click();
+    }, 3000) */
 </script>
 
 <script src="js/show_sensor_data.js"></script>
