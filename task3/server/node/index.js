@@ -1,14 +1,10 @@
 // Import required packages
-var Thingy = require('thingy52');
-var Hs100Api = require('hs100-api');
-
-var HS100_IP = '192.168.230.204';
+var myThingy = require('./iot');
+var thingyServices = require('./services');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
-var {startRadio, stopRadio} = require('./radio');
-var thingyDiscovered = false;
 
 app.use(
     express.static(__dirname + '/public'),
@@ -16,9 +12,8 @@ app.use(
     bodyParser.json(),
     cors()
 );
-
 var thingy52;
-var enabled;
+
 const mongoClient = require('mongodb').MongoClient;
 
 const mongo = {
@@ -75,120 +70,62 @@ app.get('/api/v1/data', async (req, res) => {
             .then((data) => res.json(data)));
 });
 
-function switchHs100(state) {
-    return new Promise(function (resolve, reject) {
-        resolve(state);
-        return true;
-        const client = new Hs100Api.Client();
-        const lightplug = client.getPlug({host: HS100_IP});
-        lightplug.getInfo().then(console.log);
-        lightplug.setPowerState(status);
-    })
-}
-
-function switchRadio(state) {
-    return new Promise(function (resolve, reject) {
-        state == 'true' ? startRadio(thingy52) : stopRadio(thingy52);
-        resolve(state);
-    });
-}
-
-function switchLight(state) {
-    return new Promise(function (resolve, reject) {
-        var led = {
-            r : 255,
-            g : 10,
-            b : 10
-        };
-
-        if(state=='true') {
-            led.r = 0;
-            led.g = 128;
-        } else {
-            led.r = 255;
-            led.g = 0;
-        }
-
-        thingy52.led_set(led, function() {
-            console.log( state=='true' ? 'enabled' : 'disabled');
-            resolve(state);
-        });
-
-    })
-}
 
 app.get('/api/v1/service/:name/:state', async (req, res) => {
     const {name, state} = req.params;
     console.log(req.params, name, state);
     let result;
-    if( ! thingyDiscovered) {
-        console.log('Discovering thingy. please wait ...');
-        return res.json({state: false});
-    }
+
     switch (name) {
         case 'hs100':
-            result = await switchHs100(state);
+            result = await myThingy.switchHs100(state);
             return res.json({state: result});
             break;
         case 'radio':
-            result = await switchRadio(state);
+            result = await myThingy.switchRadio(state);
             return res.json({state: result});
             break;
         case 'light':
             console.log('Inside switch light', state)
-            result = await switchLight(state);
+            result = await myThingy.switchLight(state);
             return res.json({state: result});
             break;
 
     }
 });
 
-function onButtonChange(state) {
-    console.log('Button change to ' + state);
-}
-
-function onDiscover(thingy) {
-    console.log('Discovered thingy');
-    thingyDiscovered = true;
-    thingy.on('disconnect', function () {
-        console.log('Disconnected!');
-    });
-    thingy52 = thingy;
-
-    thingy.connectAndSetUp(function (error) {
-        console.log('Connected! ' + error);
-        thingy.on('buttonNotif', onButtonChange);
-        thingy.button_enable(function(error) {
-            // console.log('Button enabled! ' + error);
-        });
-        enabled = true;
-    });
-}
 
 function startServices() {
     return new Promise((resolve, reject) => {
         let counter = 0;
         setInterval(() => {
             console.log('Running service in the background : ' + counter++);
-        }, 2000);
-        resolve(true);
+            // thingyServices.start(myThingy.thingy52);
+            resolve(true);
+        }, 5000);
+
     })
 }
 
 function connectThingy() {
     return new Promise((resolve, reject) => {
         console.log('Connecting to thingy');
-        Thingy.discover(onDiscover.bind(Thingy));
+        myThingy.discover((thingy) => {
+            thingy52 = thingy;
+            console.log('Call back thingy set', thingy52);
+        });
+        setTimeout(function () {
+            console.log('mythingy', myThingy.thingy52());
+        }, 100);
         resolve(true);
     })
 }
 
-function setThingyStatus(status) {
-    thingyDiscovered = status;
-    console.log('setThingyStatus :' + status)
+function showThingyStatus(status) {
+    console.log('ThingyStatus : ' + status)
 }
 
-startServices().then(()=>connectThingy().then((status)=>setThingyStatus(status)));
+startServices().then(()=>connectThingy().then((status)=>showThingyStatus(status)));
 
 app.listen(5555, () => console.log('Server started on port ' + 5555));
 
