@@ -13,6 +13,8 @@ app.use(
     cors()
 );
 var thingy52;
+var mt;
+
 
 const mongoClient = require('mongodb').MongoClient;
 
@@ -23,6 +25,7 @@ const mongo = {
 };
 let db = null;
 
+class abc {}
 function connectMongo() {
     return new Promise(function (resolve, reject) {
         if (db) {
@@ -78,16 +81,16 @@ app.get('/api/v1/service/:name/:state', async (req, res) => {
 
     switch (name) {
         case 'hs100':
-            result = await myThingy.switchHs100(state);
+            result = await mt.switchHs100(state);
             return res.json({state: result});
             break;
         case 'radio':
-            result = await myThingy.switchRadio(state);
+            result = await mt.switchRadio(state);
             return res.json({state: result});
             break;
         case 'light':
             console.log('Inside switch light', state)
-            result = await myThingy.switchLight(state);
+            result = await mt.switchLight(state);
             return res.json({state: result});
             break;
 
@@ -106,15 +109,15 @@ function startServices() {
 
     })
 }
-
 function connectThingy() {
     return new Promise((resolve, reject) => {
         console.log('Connecting to thingy');
-        myThingy.discover((thingy) => {
+        /*myThingy.discover((thingy) => {
             thingy52 = thingy;
             // console.log('Call back thingy set', thingy52);
             resolve(thingy);
-        });
+        }); */
+        mt  = new myThingy();
 
     })
 }

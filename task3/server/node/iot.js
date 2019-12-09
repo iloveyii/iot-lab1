@@ -1,103 +1,87 @@
 // Import required packages
-var Thingy = require('thingy52');
-var Hs100Api = require('hs100-api');
-var {startRadio, stopRadio} = require('./radio');
+const Thingy = require('thingy52');
+const Hs100Api = require('hs100-api');
+const {startRadio, stopRadio} = require('./radio');
 
-var HS100_IP = '192.168.230.204';
-var thingyDiscovered = false;
-var thingy52;
-var enabled;
+const HS100_IP = '192.168.230.204';
 
 
-function isThingyNotConnected() {
-    if (thingyDiscovered) {
-        return false;
+class MyThingy {
+    constructor() {
+        this.onDiscover = this.onDiscover.bind(this);
+        this.switchLight = this.switchLight.bind(this);
+        Thingy.discover(this.onDiscover);
+        this.thingy = null;
     }
-    console.log('Discovering thingy. please wait ...');
-    myThingy.discover();
-    return true;
-}
+    onDiscover (thingy) {
+        console.log('Discovered thingy in the class');
+        this.thingy = thingy;
+        thingy.connectAndSetUp(function (error) {
+            console.log('Connected! ' + error);
+            thingy.button_enable(function (error) {
+                console.log('Button enabled! ' + error);
+            });
+            thingy.on('buttonNotif', () => console.log('btn'))
+        });
+    }
 
-function switchHs100(state) {
-    if (isThingyNotConnected()) return showThingyNotConnected();
+    isSetThingy() {
+        if(this.thingy) return true;
+        console.log('Discovering thing, please wait ...');
+        Thingy.discover(this.onDiscover);
+    }
 
-    return new Promise(function (resolve, reject) {
-        // @TODO hsNotConnected
-        if (isThingyNotConnected()) return resolve(false);
-        return true;
-        const client = new Hs100Api.Client();
-        const lightplug = client.getPlug({host: HS100_IP});
-        lightplug.getInfo().then(console.log);
-        lightplug.setPowerState(status);
-    })
-}
+    async switchLight(state) {
+        const self = this;
+        return new Promise(function (resolve, reject) {
+            if(! self.isSetThingy()) return resolve(false);
+            const led = {
+                r: 255,
+                g: 10,
+                b: 10
+            };
 
-function switchRadio(state) {
-    return new Promise(function (resolve, reject) {
-        if (isThingyNotConnected()) return resolve(false);
-        state == 'true' ? startRadio(thingy52) : stopRadio(thingy52);
-        resolve(state);
-    });
-}
+            if (Number(state) == 1) {
+                led.r = 0;
+                led.g = 128;
+            } else {
+                led.r = 255;
+                led.g = 0;
+            }
 
-function switchLight(state) {
-    return new Promise(function (resolve, reject) {
-        if (isThingyNotConnected()) return resolve(false);
-        var led = {
-            r: 255,
-            g: 10,
-            b: 10
-        };
+            self.thingy.led_set(led, function () {
+                console.log(Number(state) === 1 ? 'Lights On' : 'Lights Off');
+                resolve(state);
+            });
+        })
+    }
 
-        if (state == 'true') {
-            led.r = 0;
-            led.g = 128;
-        } else {
-            led.r = 255;
-            led.g = 0;
-        }
-
-        thingy52.led_set(led, function () {
-            console.log(state == 'true' ? 'enabled' : 'disabled');
+    async switchRadio(state) {
+        const self = this;
+        return new Promise(function (resolve, reject) {
+            if(! self.isSetThingy()) return resolve(false);
+            Number(state) === 1 ? startRadio(self.thingy) : stopRadio(self.thingy);
             resolve(state);
         });
-
-    })
-}
-
-function startSensors() {
-
-}
-
-function onDiscover(thingy, cb) {
-    console.log('Discovered thingy');
-    thingyDiscovered = true;
-    thingy.on('disconnect', function () {
-        console.log('Disconnected!');
-    });
-    thingy52 = thingy;
-    cb(thingy);
-
-    thingy52.connectAndSetUp(function (error) {
-        console.log('Connected! ' + error);
-        thingy.button_enable(function (error) {
-            // console.log('Button enabled! ' + error);
-        });
-        enabled = true;
-    });
-}
-
-const myThingy = {
-    discover: function (cb) {
-        onDiscover.bind(Thingy)
-        Thingy.discover((thingy)=>onDiscover(thingy, cb));
-    },
-    switchHs100: switchHs100,
-    switchRadio: switchRadio,
-    switchLight: switchLight,
-    thingy52 : function () {
-        return thingy52;
     }
-};
 
-module.exports = myThingy;
+    async switchHs100(state) {
+        const self = this;
+        return new Promise(function (resolve, reject) {
+            // @TODO hsNotConnected
+            console.log('HS100 ', state);
+            if(! self.isSetThingy()) return resolve(state);
+            return resolve(state);
+
+            const client = new Hs100Api.Client();
+            const lightplug = client.getPlug({host: HS100_IP});
+            lightplug.getInfo().then(console.log);
+            lightplug.setPowerState(status);
+            resolve(true);
+        })
+    }
+
+
+}
+
+module.exports = MyThingy;

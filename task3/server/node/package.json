@@ -4,7 +4,7 @@
   "description": "This is and RESTFul server which fetches data from mongodb",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon --exec babel-node index.js"
   },
   "keywords": [
     "node",
@@ -14,6 +14,9 @@
   "author": "Hazrat Ali <iloveyii@yahoo.com>",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/node": "^7.7.4",
+    "@babel/preset-env": "^7.7.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
