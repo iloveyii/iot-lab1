@@ -25,7 +25,6 @@ const mongo = {
 };
 let db = null;
 
-class abc {}
 function connectMongo() {
     return new Promise(function (resolve, reject) {
         if (db) {
@@ -105,21 +104,17 @@ function startServices() {
             console.log('Running service in the background : ' + counter++);
             // thingyServices.start(myThingy.thingy52);
             resolve(true);
-        }, 5000);
-
+        }, 8000);
+        // mt.startSensors().then(()=>resolve(true));
     })
 }
+
 function connectThingy() {
     return new Promise((resolve, reject) => {
         console.log('Connecting to thingy');
-        /*myThingy.discover((thingy) => {
-            thingy52 = thingy;
-            // console.log('Call back thingy set', thingy52);
-            resolve(thingy);
-        }); */
         mt  = new myThingy();
-
-    })
+        mt.connect().then((thingy)=>resolve(thingy))
+    });
 }
 
 function showThingyStatus(status) {
