@@ -69,13 +69,14 @@ function startSensors() {
 
 }
 
-function onDiscover(thingy) {
+function onDiscover(thingy, cb) {
     console.log('Discovered thingy');
     thingyDiscovered = true;
     thingy.on('disconnect', function () {
         console.log('Disconnected!');
     });
     thingy52 = thingy;
+    cb(thingy);
 
     thingy52.connectAndSetUp(function (error) {
         console.log('Connected! ' + error);
@@ -87,8 +88,9 @@ function onDiscover(thingy) {
 }
 
 const myThingy = {
-    discover: function () {
-        Thingy.discover(onDiscover.bind(Thingy));
+    discover: function (cb) {
+        onDiscover.bind(Thingy)
+        Thingy.discover((thingy)=>onDiscover(thingy, cb));
     },
     switchHs100: switchHs100,
     switchRadio: switchRadio,

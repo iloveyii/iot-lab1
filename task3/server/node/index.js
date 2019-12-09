@@ -112,20 +112,19 @@ function connectThingy() {
         console.log('Connecting to thingy');
         myThingy.discover((thingy) => {
             thingy52 = thingy;
-            console.log('Call back thingy set', thingy52);
+            // console.log('Call back thingy set', thingy52);
+            resolve(thingy);
         });
-        setTimeout(function () {
-            console.log('mythingy', myThingy.thingy52());
-        }, 100);
-        resolve(true);
+
     })
 }
 
 function showThingyStatus(status) {
-    console.log('ThingyStatus : ' + status)
+    console.log('ThingyStatus : ' + thingy52)
 }
 
-startServices().then(()=>connectThingy().then((status)=>showThingyStatus(status)));
+connectThingy().then(()=>startServices().then((t)=>showThingyStatus(t)));
+//startServices().then(()=>connectThingy().then((status)=>showThingyStatus(status)));
 
 app.listen(5555, () => console.log('Server started on port ' + 5555));
 
