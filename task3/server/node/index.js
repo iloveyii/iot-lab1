@@ -8,6 +8,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 var {startRadio, stopRadio} = require('./radio');
+var thingyDiscovered = false;
 
 app.use(
     express.static(__dirname + '/public'),
@@ -120,6 +121,10 @@ app.get('/api/v1/service/:name/:state', async (req, res) => {
     const {name, state} = req.params;
     console.log(req.params, name, state);
     let result;
+    if( ! thingyDiscovered) {
+        console.log('Discovering thingy. please wait ...');
+        return res.json({state: false});
+    }
     switch (name) {
         case 'hs100':
             result = await switchHs100(state);
@@ -144,6 +149,7 @@ function onButtonChange(state) {
 
 function onDiscover(thingy) {
     console.log('Discovered thingy');
+    thingyDiscovered = true;
     thingy.on('disconnect', function () {
         console.log('Disconnected!');
     });

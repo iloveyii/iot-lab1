@@ -54,6 +54,7 @@ var sendIntervalId = null;
 function convertAndBuffer(data) {
     if (speaker_configured) {
         var index = 0;
+
         for (index = 0; index < data.length - 1; index += 2) {
             var sample_16 = data.readInt16LE(index);
 
@@ -125,6 +126,8 @@ function onSpeakerStatus(status) {
 }
 
 function onDiscover(thingy) {
+    audio_buffer = new Buffer(audio_buffer_size);
+    audio_buffer_head = 0;
     console.log('Discovered: ' + thingy);
     this_thingy = thingy;
 
@@ -155,8 +158,13 @@ function onDiscover(thingy) {
     });
 }
 
-function stopRadio() {
+function stopRadio(thingy) {
     clearInterval(sendIntervalId);
+    thingy.speaker_status_disable(function (error) {
+        if(error) {
+            console.log('An error occurred in disabling speaker');
+        }
+    });
 }
 
 module.exports = {
