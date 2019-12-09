@@ -1,10 +1,9 @@
 // Import required packages
+import insertIntoMongo from './services/mongo';
+import insertIntoFirebase from './services/firebase';
+
 const Thingy = require('thingy52');
 const Hs100Api = require('hs100-api');
-
-var insertIntoMongo = require('./services/mongo');
-var ref = require('./services/firebase');
-
 const {startRadio, stopRadio} = require('./radio');
 
 const HS100_IP = '192.168.230.204';
@@ -41,7 +40,7 @@ class MyThingy {
         console.log('Discovered thingy in the class with  uuid : ', (thingy.uuid));
         this.thingy = thingy;
         thingy.connectAndSetUp(function (error) {
-            console.log('Connected! ' + error);
+            console.log('Connected, and error ' + error);
             resolve(thingy);
         });
     }
@@ -132,9 +131,8 @@ class MyThingy {
         console.log(JSON.stringify(this.data));
         insertIntoMongo(this.data);
 
-        if(this.data.eco2) {
-            const usersRef = ref.push();
-            usersRef.set(this.data);
+        if (this.data.eco2) {
+            insertIntoFirebase(this.data);
         }
     }
 

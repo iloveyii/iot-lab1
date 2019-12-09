@@ -1,4 +1,3 @@
-const fs = require('fs');
 const mongoClient = require('mongodb').MongoClient;
 
 const mongo = {
@@ -24,7 +23,6 @@ function connectMongo() {
     })
 }
 
-
 function insertIntoMongo(d) {
     return new Promise(function (resolve, reject) {
         d._id && delete d['_id'];
@@ -42,17 +40,10 @@ function insertIntoMongo(d) {
     });
 }
 
-
-
-
-
-function f(d) {
+function insert(d) {
     connectMongo()
         .then(() => insertIntoMongo(d)
             .then(()=> d={}));
 }
 
-module.exports = f;
-
-// RUN AS : node reset_mongo.js
-// db-migrate --config
+export default insert;
