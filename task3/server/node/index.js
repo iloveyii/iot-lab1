@@ -178,7 +178,7 @@ function startServices() {
 function connectThingy() {
     return new Promise((resolve, reject) => {
         console.log('Connecting to thingy');
-        Thingy.discover(onDiscover);
+        Thingy.discover(onDiscover.bind(Thingy));
         resolve(true);
     })
 }
