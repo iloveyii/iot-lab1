@@ -1,6 +1,5 @@
 // Import required packages
-var myThingy = require('./iot');
-var thingyServices = require('./services');
+const MyThingy = require('./src/iot');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -12,8 +11,7 @@ app.use(
     bodyParser.json(),
     cors()
 );
-var thingy52;
-var mt;
+let mt;
 
 
 const mongoClient = require('mongodb').MongoClient;
@@ -101,25 +99,20 @@ app.get('/api/v1/service/:name/:state', async (req, res) => {
 function startServices(thingy) {
     return new Promise((resolve, reject) => {
         let counter = 0;
-        setInterval(() => {
-            console.log('Running service in the background : ' + counter++);
-            // thingyServices.start(myThingy.thingy52);
-            resolve(true);
-        }, 8000);
         mt.startSensors().then(()=>resolve(mt.uuid));
-    })
+    });
 }
 
 function connectThingy() {
     return new Promise((resolve, reject) => {
         console.log('Connecting to thingy');
-        mt  = new myThingy();
+        mt  = new MyThingy();
         mt.connect().then((thingy)=>resolve(thingy))
     });
 }
 
 function showThingyStatus(status) {
-    console.log('ThingyStatus : ' + thingy52)
+    console.log('ThingyStatus : ' + status)
 }
 
 connectThingy().then((thingy)=>startServices(thingy).then((t)=>showThingyStatus(t)));

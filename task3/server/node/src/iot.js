@@ -7,7 +7,7 @@ const Hs100Api = require('hs100-api');
 const {startRadio, stopRadio} = require('./radio');
 
 const HS100_IP = '192.168.230.204';
-const INTERVAL = 5000;
+const INTERVAL = 2000;
 
 
 class MyThingy {
@@ -25,6 +25,9 @@ class MyThingy {
 
         this._enableSensors = this._enableSensors.bind(this);
         this._disableSensors = this._disableSensors.bind(this);
+
+        this._onButtonChange = this._onButtonChange.bind(this);
+
         this.thingy = null;
         this.startSensorsStatus = false;
         this.data = {};
@@ -103,10 +106,9 @@ class MyThingy {
 
     async startSensors() {
         const self = this;
-
         return new Promise(function (resolve, reject) {
             if (!self.isSetThingy()) return resolve(true);
-
+            self.startSensorsStatus = true;
             self._addEventListeners();
             self._addIntervals();
             self._enableSensors();
@@ -116,11 +118,13 @@ class MyThingy {
     _onButtonChange(state) {
         if (state === 'Pressed') {
             if (this.startSensorsStatus === true) {
-                this._disableSensors();
                 this.startSensorsStatus = false;
+                this._disableSensors();
+                this.switchLight(0).then(()=>console.log('Disabled sensors data'));
             } else {
-                this._enableSensors();
                 this.startSensorsStatus = true;
+                this._enableSensors();
+                this.switchLight(1).then(()=>console.log('Enabled sensors data'));
             }
         }
     }
@@ -250,32 +254,29 @@ class MyThingy {
 
     _disableSensors() {
         this.thingy.temperature_disable(function (error) {
-            console.log('Temperature sensor started! ' + ((error) ? error : ''));
+            console.log('Temperature sensor disabled! ' + ((error) ? error : ''));
         });
         this.thingy.pressure_disable(function (error) {
-            console.log('Pressure sensor started! ' + ((error) ? error : ''));
+            console.log('Pressure sensor disabled! ' + ((error) ? error : ''));
         });
         this.thingy.humidity_disable(function (error) {
-            console.log('Humidity sensor started! ' + ((error) ? error : ''));
+            console.log('Humidity sensor disabled! ' + ((error) ? error : ''));
         });
         this.thingy.color_disable(function (error) {
-            console.log('Color sensor started! ' + ((error) ? error : ''));
+            console.log('Color sensor disabled! ' + ((error) ? error : ''));
         });
         this.thingy.gas_disable(function (error) {
-            console.log('Gas sensor started! ' + ((error) ? error : ''));
-        });
-        this.thingy.button_disable(function (error) {
-            console.log('Button started! ' + ((error) ? error : ''));
+            console.log('Gas sensor disabled! ' + ((error) ? error : ''));
         });
         this.thingy.rotation_disable(function (error) {
-            console.log('Rotation sensor started ' + error ? error : '');
+            console.log('Rotation sensor disabled ' + error ? error : '');
         });
         this.thingy.heading_disable(function (error) {
-            console.log('Heading sensor started ' + error ? error : '');
+            console.log('Heading sensor disabled ' + error ? error : '');
         });
 
         this.thingy.stepCounter_disable(function (error) {
-            console.log('Step counter sensor started ' + error ? error : '');
+            console.log('Step counter sensor disabled ' + error ? error : '');
         });
     }
 }
