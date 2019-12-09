@@ -1,6 +1,10 @@
 // Import required packages
 const Thingy = require('thingy52');
 const Hs100Api = require('hs100-api');
+
+var insertIntoMongo = require('./services/mongo');
+var ref = require('./services/firebase');
+
 const {startRadio, stopRadio} = require('./radio');
 
 const HS100_IP = '192.168.230.204';
@@ -122,38 +126,32 @@ class MyThingy {
         }
     }
 
-
     _onTemperatureData(temperature) {
-        // console.log('Temperature sensor: ' + temperature);
         this.data.temperature = temperature;
         this.data._id && delete this.data['_id'];
         console.log(JSON.stringify(this.data));
-        /*insertIntoMongo(this.data);
-        const usersRef = ref.push();
-        usersRef.set(this.data);*/
+        insertIntoMongo(this.data);
+
+        if(this.data.eco2) {
+            const usersRef = ref.push();
+            usersRef.set(this.data);
+        }
     }
 
     _onPressureData(pressure) {
-        // console.log('Pressure sensor: ' + pressure);
         this.data.pressure = pressure;
     }
 
     _onHumidityData(humidity) {
-        // console.log('Humidity sensor: ' + humidity);
         this.data.humidity = humidity;
     }
 
     _onGasData(gas) {
-        // console.log('Gas sensor: eCO2 ' + gas.eco2 + ' - TVOC ' + gas.tvoc );
         this.data.eco2 = gas.eco2;
         this.data.tvoc = gas.tvoc;
     }
 
     _onColorData(color) {
-        /* console.log('Color sensor: r ' + color.red +
-            ' g ' + color.green +
-            ' b ' + color.blue +
-            ' c ' + color.clear ); */
         this.data.color = color;
     }
 

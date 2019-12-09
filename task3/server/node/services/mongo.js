@@ -1,6 +1,5 @@
 const fs = require('fs');
 const mongoClient = require('mongodb').MongoClient;
-const objectId = require('mongodb').ObjectID;
 
 const mongo = {
     dbname: 'sensor_data',
