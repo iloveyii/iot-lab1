@@ -165,8 +165,30 @@ function onDiscover(thingy) {
     });
 }
 
+function startServices() {
+    return new Promise((resolve, reject) => {
+        let counter = 0;
+        setInterval(() => {
+            console.log('Running service in the background : ' + counter++);
+        }, 2000);
+        resolve(true);
+    })
+}
 
-Thingy.discover(onDiscover);
+function connectThingy() {
+    return new Promise((resolve, reject) => {
+        console.log('Connecting to thingy');
+        Thingy.discover(onDiscover);
+        resolve(true);
+    })
+}
+
+function setThingyStatus(status) {
+    thingyDiscovered = status;
+    console.log('setThingyStatus :' + status)
+}
+
+startServices().then(()=>connectThingy().then((status)=>setThingyStatus(status)));
 
 app.listen(5555, () => console.log('Server started on port ' + 5555));
 
