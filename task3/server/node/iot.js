@@ -11,17 +11,30 @@ class MyThingy {
     constructor() {
         this.onDiscover = this.onDiscover.bind(this);
         this.switchLight = this.switchLight.bind(this);
+        this._onTemperatureData = this._onTemperatureData.bind(this);
+        this._onPressureData = this._onPressureData.bind(this);
+        this._onHumidityData = this._onHumidityData.bind(this);
+        this._onHumidityData = this._onHumidityData.bind(this);
+        this._onHeadingData = this._onHeadingData.bind(this);
+        this._onGasData = this._onGasData.bind(this);
+        this._onColorData = this._onColorData.bind(this);
+        this._onRotationData = this._onRotationData.bind(this);
+
+        this._enableSensors = this._enableSensors.bind(this);
+        this._disableSensors = this._disableSensors.bind(this);
         this.thingy = null;
         this.startSensorsStatus = false;
         this.data = {};
     }
+
     connect() {
-        return new Promise( (resolve, reject) => {
-            Thingy.discover((thingy)=>this.onDiscover(thingy, resolve));
+        return new Promise((resolve, reject) => {
+            Thingy.discover((thingy) => this.onDiscover(thingy, resolve));
         });
     }
-    onDiscover (thingy, resolve) {
-        console.log('Discovered thingy in the class', Object.keys(thingy));
+
+    onDiscover(thingy, resolve) {
+        console.log('Discovered thingy in the class with  uuid : ', (thingy.uuid));
         this.thingy = thingy;
         thingy.connectAndSetUp(function (error) {
             console.log('Connected! ' + error);
@@ -30,7 +43,7 @@ class MyThingy {
     }
 
     isSetThingy() {
-        if(this.thingy) return true;
+        if (this.thingy) return true;
         console.log('Discovering thing, please wait ...');
         Thingy.discover(this.onDiscover);
     }
@@ -38,7 +51,7 @@ class MyThingy {
     async switchLight(state) {
         const self = this;
         return new Promise(function (resolve, reject) {
-            if(! self.isSetThingy()) return resolve(false);
+            if (!self.isSetThingy()) return resolve(false);
             const led = {
                 r: 255,
                 g: 10,
@@ -63,7 +76,7 @@ class MyThingy {
     async switchRadio(state) {
         const self = this;
         return new Promise(function (resolve, reject) {
-            if(! self.isSetThingy()) return resolve(false);
+            if (!self.isSetThingy()) return resolve(false);
             Number(state) === 1 ? startRadio(self.thingy) : stopRadio(self.thingy);
             resolve(state);
         });
@@ -74,7 +87,7 @@ class MyThingy {
         return new Promise(function (resolve, reject) {
             // @TODO hsNotConnected
             console.log('HS100 ', state);
-            if(! self.isSetThingy()) return resolve(state);
+            if (!self.isSetThingy()) return resolve(state);
             return resolve(state);
 
             const client = new Hs100Api.Client();
@@ -88,17 +101,18 @@ class MyThingy {
     async startSensors() {
         const self = this;
 
-        return new Promise( function(resolve, reject) {
-            if(! self.isSetThingy()) return resolve(true);
+        return new Promise(function (resolve, reject) {
+            if (!self.isSetThingy()) return resolve(true);
 
             self._addEventListeners();
             self._addIntervals();
             self._enableSensors();
         });
     }
+
     _onButtonChange(state) {
-        if(state === 'Pressed') {
-            if(this.startSensorsStatus === true) {
+        if (state === 'Pressed') {
+            if (this.startSensorsStatus === true) {
                 this._disableSensors();
                 this.startSensorsStatus = false;
             } else {
@@ -237,6 +251,7 @@ class MyThingy {
             console.log('Step counter sensor started ' + error ? error : '');
         });
     }
+
     _disableSensors() {
         this.thingy.temperature_disable(function (error) {
             console.log('Temperature sensor started! ' + ((error) ? error : ''));

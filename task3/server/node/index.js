@@ -77,6 +77,7 @@ app.get('/api/v1/service/:name/:state', async (req, res) => {
     const {name, state} = req.params;
     console.log(req.params, name, state);
     let result;
+    if(mt === null) return res.json({state: 0});
 
     switch (name) {
         case 'hs100':
@@ -97,7 +98,7 @@ app.get('/api/v1/service/:name/:state', async (req, res) => {
 });
 
 
-function startServices() {
+function startServices(thingy) {
     return new Promise((resolve, reject) => {
         let counter = 0;
         setInterval(() => {
@@ -105,7 +106,7 @@ function startServices() {
             // thingyServices.start(myThingy.thingy52);
             resolve(true);
         }, 8000);
-        // mt.startSensors().then(()=>resolve(true));
+        mt.startSensors().then(()=>resolve(mt.uuid));
     })
 }
 
@@ -121,7 +122,7 @@ function showThingyStatus(status) {
     console.log('ThingyStatus : ' + thingy52)
 }
 
-connectThingy().then(()=>startServices().then((t)=>showThingyStatus(t)));
+connectThingy().then((thingy)=>startServices(thingy).then((t)=>showThingyStatus(t)));
 //startServices().then(()=>connectThingy().then((status)=>showThingyStatus(status)));
 
 app.listen(5555, () => console.log('Server started on port ' + 5555));
