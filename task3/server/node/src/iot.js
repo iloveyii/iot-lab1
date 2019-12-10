@@ -7,7 +7,7 @@ const Hs100Api = require('hs100-api');
 const {startRadio, stopRadio} = require('./radio');
 
 const HS100_IP = '192.168.230.204';
-const INTERVAL = 1500;
+const INTERVAL = 10000;
 
 
 class MyThingy {
@@ -91,16 +91,11 @@ class MyThingy {
     async switchHs100(state) {
         const self = this;
         return new Promise(function (resolve, reject) {
-            // @TODO hsNotConnected
-            console.log('HS100 ', state);
-            if (!self.isSetThingy()) return resolve(state);
-            return resolve(state);
-
             const client = new Hs100Api.Client();
             const lightplug = client.getPlug({host: HS100_IP});
             lightplug.getInfo().then(console.log);
-            lightplug.setPowerState(status);
-            resolve(true);
+            lightplug.setPowerState(Number(state)=== 1 ? true : false);
+            resolve(state);
         })
     }
 
