@@ -482,6 +482,10 @@
         </footer>
     </div>
 </div>
+
+<div class="row">
+    <img  id="live-image" src="" alt="">
+</div>
 <!--   Core JS Files   -->
 <script src="js/jquery.min.js"></script>
 <script src="js/popper.min.js"></script>
@@ -569,8 +573,9 @@
 
 <script>
     const socket = io.connect('http://localhost:5555');
-    socket.on('image', data => {
-        console.log(data);
+    socket.on('image', image => {
+        const liveImage = document.getElementById('live-image');
+        liveImage.src = `data:image/jpeg;base64,${image}`;
     });
 
 </script>

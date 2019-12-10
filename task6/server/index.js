@@ -1,6 +1,6 @@
 // Import required packages
 const path = require('path');
-const MyThingy = require('./src/iot');
+// const MyThingy = require('./src/iot');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -16,7 +16,12 @@ app.use(
 );
 const http = require('http').Server(app);
 const io = socket(http);
-const wCap = cv.VideoCapture(0);
+const wCap = new cv.VideoCapture(0);
+wCap.set(cv.CAP_PROP_FRAME_HEIGHT, 200);
+wCap.set(cv.CAP_PROP_FRAME_WIDTH, 200);
+
+const FPS = 15;
+
 let mt;
 
 
@@ -95,10 +100,13 @@ app.get('/', (req, res) => {
 });
 
 setInterval(() => {
-    io.emit('image', 'image data');
-}, 6000);
+    const frame = wCap.read();
+    const image = cv.imencode('.jpg', frame).toString('base64');
+    io.emit('image', image);
+}, 1000 / FPS);
 
 
+/*
 function startServices() {
     return new Promise((resolve, reject) => {
         mt.startSensors().then(()=>resolve(mt.uuid));
@@ -114,7 +122,7 @@ function connectThingy() {
 }
 
 connectThingy().then((thingy)=>startServices(thingy).then((status)=>console.log('ThingyStatus : ' + status)));
-
+*/
 http.listen(5555, () => console.log('Server started on port ' + 5555));
 
 
