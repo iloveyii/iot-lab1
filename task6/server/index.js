@@ -6,6 +6,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const socket = require('socket.io');
+const cv = require('opencv4nodejs');
 
 app.use(
     express.static(__dirname + '/public'),
@@ -15,7 +16,7 @@ app.use(
 );
 const http = require('http').Server(app);
 const io = socket(http);
-
+const wCap = cv.VideoCapture(0);
 let mt;
 
 
