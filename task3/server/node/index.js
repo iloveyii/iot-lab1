@@ -41,7 +41,6 @@ function connectMongo() {
     })
 }
 
-
 function readData() {
     return new Promise(function (resolve, reject) {
         db.collection('nt52').find({}).toArray((err, data) => {
@@ -56,20 +55,11 @@ function readData() {
     });
 }
 
-
-function f(d) {
-    connectMongo()
-        .then(() => readData()
-            .then((data) => d = {}));
-}
-
-
 app.get('/api/v1/data', async (req, res) => {
     await connectMongo()
         .then(() => readData()
             .then((data) => res.json(data)));
 });
-
 
 app.get('/api/v1/service/:name/:state', async (req, res) => {
     const {name, state} = req.params;
@@ -91,14 +81,11 @@ app.get('/api/v1/service/:name/:state', async (req, res) => {
             result = await mt.switchLight(state);
             return res.json({state: result});
             break;
-
     }
 });
 
-
-function startServices(thingy) {
+function startServices() {
     return new Promise((resolve, reject) => {
-        let counter = 0;
         mt.startSensors().then(()=>resolve(mt.uuid));
     });
 }
@@ -111,12 +98,7 @@ function connectThingy() {
     });
 }
 
-function showThingyStatus(status) {
-    console.log('ThingyStatus : ' + status)
-}
-
-connectThingy().then((thingy)=>startServices(thingy).then((t)=>showThingyStatus(t)));
-//startServices().then(()=>connectThingy().then((status)=>showThingyStatus(status)));
+connectThingy().then((thingy)=>startServices(thingy).then((status)=>console.log('ThingyStatus : ' + status)));
 
 app.listen(5555, () => console.log('Server started on port ' + 5555));
 
