@@ -32,7 +32,7 @@ function displayData(data) {
     if (data && data.color) {
         const div = document.createElement('h5');
         div.style.backgroundColor = 'rgb(' + data.color.red % 255 + ',' + data.color.green % 255 + ',' + data.color.blue % 255 + ')';
-        div.style.display='table-cell';
+        div.style.display = 'table-cell';
         document.getElementById('color').innerHTML = '';
         document.getElementById('color').appendChild(div);
         data.color = rgbToHex(data.color.red % 255, data.color.green % 255, data.color.blue % 255);
@@ -47,7 +47,12 @@ function displayData(data) {
     }
 
     historicData.push(data);
-    showDataInTable(historicData.slice(-5).reverse())
+    const dataToShow = historicData.slice(-5);
+    showDataInTable(dataToShow.reverse());
+
+    drawChart('temperature', dataToShow.reverse());
+    drawChart('humidity', dataToShow);
+    drawChart('pressure', dataToShow);
 
     // ['temperature', 'pressure', 'eco2', 'humidity', 'tvoc', 'heading', 'rotation', 'color'].forEach(id => showHistoricData(historicData, id))
 
@@ -62,7 +67,7 @@ function showHistoricData(hData, id) {
         console.log(da[id]);
         var li = document.createElement('li');
         li.className = 'list-inline-item';
-        if(id==='color') li.style.backgroundColor = da[id];
+        if (id === 'color') li.style.backgroundColor = da[id];
         li.innerText = da[id];
         temp.appendChild(li);
     })
@@ -79,6 +84,8 @@ function rgbToHex(r, g, b) {
 
 function showDataInTable(d) {
     console.log('inside showtable', d);
+
+
     const table = document.getElementById('data-table');
     table.innerHTML = '';
 
@@ -93,11 +100,11 @@ function showDataInTable(d) {
         tr.appendChild(td);
 
         Object.keys(row).map(key => {
-            if(['temperature', 'pressure', 'humidity', 'eco2', 'tvoc', 'heading', 'color'].includes(key)) {
+            if (['temperature', 'pressure', 'humidity', 'eco2', 'tvoc', 'heading', 'color'].includes(key)) {
                 td = document.createElement('td');
-                if(key === 'color' && row[key]) {
+                if (key === 'color' && row[key]) {
                     //const color = rgbToHex(row[key].red % 255, row[key].green % 255, row[key].blue % 255);
-                    td.innerHTML = "<div style='background-color: "+row[key]+" '>"+row[key]+"</div>";
+                    td.innerHTML = "<div style='background-color: " + row[key] + " '>" + row[key] + "</div>";
                 } else {
                     td.innerText = (row[key]);
                 }
@@ -107,3 +114,50 @@ function showDataInTable(d) {
         table.appendChild(tr);
     })
 }
+
+
+function drawChart(elementId, d) {
+    let labels = ['time'];
+
+    window.d = d;
+    let max = 0;
+    var series0 = []; d.forEach( data => {
+        console.log('Inside charting', data[elementId], elementId);
+        max = max > data[elementId] ? max : data[elementId];
+        series0.push(data[elementId]);
+        labels.push(data[elementId]);
+    });
+    var series = [
+        series0
+    ];
+    console.log(series0. labels);
+    const dataTemperatureChart = {
+        labels: labels,
+        series: series
+    };
+
+    const optionsTemperatureChart = {
+        lineSmooth: Chartist.Interpolation.cardinal({
+            tension: 0
+        }),
+        low: 0,
+        high: max + 10, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+        chartPadding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+        },
+        showArea: true,
+        showLine: false,
+        showPoint: false,
+        fullWidth: true
+    };
+
+    var ds = new Chartist.Line('#' + elementId + 'Chart', dataTemperatureChart, optionsTemperatureChart);
+    let historySeries = [];
+}
+
+
+
+

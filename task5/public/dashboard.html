@@ -47,7 +47,7 @@
                         <div class="card card-stats">
                             <div class="card-header card-header-warning card-header-icon">
                                 <div class="card-icon">
-                                    <i class="material-icons">content_copy</i>
+                                    <i class="fa fa-cloud" aria-hidden="true"></i>
                                 </div>
                                 <p class="card-category">CO2</p>
                                 <h3 class="card-title" id="eco2">49/50
@@ -57,7 +57,7 @@
                             <div class="card-footer">
                                 <div class="stats">
                                     <i class="material-icons text-danger">warning</i>
-                                    <a href="#pablo" id="temperature-list">Get More Space...</a>
+                                    <a href="#pablo" id="temperature-list">Freshness</a>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                         <div class="card card-stats">
                             <div class="card-header card-header-success card-header-icon">
                                 <div class="card-icon">
-                                    <i class="material-icons">store</i>
+                                    <i class="fa fa-cc" aria-hidden="true"></i>
                                 </div>
                                 <p class="card-category">TVOC</p>
                                 <h3 class="card-title" id="tvoc">$34,245</h3>
@@ -82,14 +82,14 @@
                         <div class="card card-stats">
                             <div class="card-header card-header-danger card-header-icon">
                                 <div class="card-icon">
-                                    <i class="material-icons">info_outline</i>
+                                    <i class="fa fa-picture-o" aria-hidden="true"></i>
                                 </div>
                                 <p class="card-category">COLOR</p>
                                 <h3 class="card-title" style="float: right" id="color">75</h3>
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
-                                    <i class="material-icons">local_offer</i> Tracked from Github
+                                    <i class="material-icons">local_offer</i> Rainbow
                                 </div>
                             </div>
                         </div>
@@ -98,7 +98,7 @@
                         <div class="card card-stats">
                             <div class="card-header card-header-info card-header-icon">
                                 <div class="card-icon">
-                                    <i class="fa fa-twitter"></i>
+                                    <i class="fa fa-compass" aria-hidden="true"></i>
                                 </div>
                                 <p class="card-category">HEADING</p>
                                 <h3 class="card-title" id="heading">+245</h3>
@@ -120,13 +120,13 @@
                             <div class="card-body">
                                 <h4 class="card-title">Temperature</h4>
                                 <p class="card-category">
-                                    <span class="text-success" id="temperature"><i class="fa fa-long-arrow-up"></i> 55% </span>
-                                    increase
-                                    in today sales.</p>
+                                    <span class="text-success" style="font-size: 30px"><i class="fa fa-thermometer-half"
+                                                                                          aria-hidden="true"></i> <span
+                                            id="temperature"></span> </span></p>
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
-                                    <i class="material-icons">access_time</i> updated every 5s
+                                    <i class="material-icons">access_time</i> Updating
                                 </div>
                             </div>
                         </div>
@@ -138,11 +138,16 @@
                             </div>
                             <div class="card-body">
                                 <h4 class="card-title">Humidity</h4>
-                                <p class="card-category" id="humidity">Last Campaign Performance</p>
+                                <p class="card-category" style="font-size: 30px">
+                                    <span class="text-warning">
+                                        <i class="fa fa-tint" aria-hidden="true"></i>
+                                        <span id="humidity"></span>
+                                    </span>
+                                </p>
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
-                                    <i class="material-icons">access_time</i> campaign sent 2 days ago
+                                    <i class="material-icons">access_time</i> Updating
                                 </div>
                             </div>
                         </div>
@@ -154,11 +159,16 @@
                             </div>
                             <div class="card-body">
                                 <h4 class="card-title">Pressure</h4>
-                                <p class="card-category" id="pressure">Last Campaign Performance</p>
+                                <p class="card-category" >
+                                    <span class="text-danger" style="font-size: 26px">
+                                        <i class="fa fa-cloud" aria-hidden="true"></i>
+                                        <span id="pressure"></span>
+                                    </span>
+                                </p>
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
-                                    <i class="material-icons">access_time</i> campaign sent 2 days ago
+                                    <i class="material-icons">access_time</i> Updating
                                 </div>
                             </div>
                         </div>
@@ -484,55 +494,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
 <!-- Chartist JS -->
 <script src="js/chartist.min.js"></script>
-<script>
-
-    function drawChart(elementId) {
-        var labels = ['time'];
-        var series = [
-            []
-        ];
-        const dataTemperatureChart = {
-            labels: labels,
-            series: series
-        };
-
-        const optionsTemperatureChart = {
-            lineSmooth: Chartist.Interpolation.cardinal({
-                tension: 0
-            }),
-            low: 0,
-            high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-            chartPadding: {
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0
-            },
-            showArea: true,
-            showLine: false,
-            showPoint: false,
-            fullWidth: true
-        };
-
-        var ds = new Chartist.Line('#' + elementId, dataTemperatureChart, optionsTemperatureChart);
-        let historySeries = [];
-
-        setInterval(() => {
-            const r = Math.floor(Math.random() * 30);
-            historySeries.push(r);
-            historySeries = historySeries.slice(-20);
-            series[0] = historySeries.slice(-20);
-            ds.update();
-        }, 50);
-    }
-
-    drawChart('temperatureChart');
-    drawChart('humidityChart');
-    drawChart('pressureChart');
-
-</script>
 
 <script>
+
+    // For buttons interactions
     var states = {
         hs100: 0,
         radio: 0,
@@ -585,7 +550,7 @@
     document.getElementById('light').addEventListener('click', e => {
         e.preventDefault();
         changeButtonToPause('light')
-        makeServerRequest('light', states.light === 0 ? 1:0, (data) => {
+        makeServerRequest('light', states.light === 0 ? 1 : 0, (data) => {
             Number(data.state) === 1 ? changeButtonToOff('light') : changeButtonToOn('light');
             console.log(data)
         });
@@ -594,7 +559,7 @@
     document.getElementById('radio').addEventListener('click', e => {
         e.preventDefault();
         changeButtonToPause('radio')
-        makeServerRequest('radio', states.radio === 0 ? 1:0, (data) => {
+        makeServerRequest('radio', states.radio === 0 ? 1 : 0, (data) => {
             Number(data.state) === 1 ? changeButtonToOff('radio') : changeButtonToOn('radio');
             console.log(data)
         });
