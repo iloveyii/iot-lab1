@@ -1,0 +1,33 @@
+{
+  "name": "express-server",
+  "version": "1.0.0",
+  "description": "This is and RESTFul server which fetches data from mongodb",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node index.js"
+  },
+  "keywords": [
+    "node",
+    "mongo",
+    "iot"
+  ],
+  "author": "Hazrat Ali <iloveyii@yahoo.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/node": "^7.7.4",
+    "@babel/preset-env": "^7.7.6",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "firebase-admin": "^8.8.0",
+    "hs100-api": "^0.19.1",
+    "icecast": "^1.3.1",
+    "lame": "^1.2.4",
+    "mongodb": "^3.3.5",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.1"
+  }
+}
