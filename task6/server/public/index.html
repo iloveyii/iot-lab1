@@ -21,7 +21,8 @@
     <link href="css/button.css" rel="stylesheet"/>
 
     <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" integrity="sha256-ji09tECORKvr8xB9iCl8DJ8iNMLriDchC1+p+yt1hSs=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"
+            integrity="sha256-ji09tECORKvr8xB9iCl8DJ8iNMLriDchC1+p+yt1hSs=" crossorigin="anonymous"></script>
 </head>
 
 <body class="bg">
@@ -158,7 +159,7 @@
                             </div>
                             <div class="card-body">
                                 <h4 class="card-title">Pressure</h4>
-                                <p class="card-category" >
+                                <p class="card-category">
                                     <span class="text-danger" style="font-size: 26px">
                                         <i class="fa fa-cloud" aria-hidden="true"></i>
                                         <span id="pressure"></span>
@@ -173,7 +174,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-lg-6 col-md-12">
                         <div class="card card-bg">
@@ -457,8 +457,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="card">
+                            <div class="card-header card-header-success">
+                                <h4 class="card-title">Live stream</h4>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <img id="live-image" src="" alt="Live video">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
         <footer class="footer">
             <div class="container-fluid">
                 <nav class="float-left">
@@ -475,17 +488,12 @@
                         </li>
                     </ul>
                 </nav>
-                <div class="copyright float-right">
-
-                </div>
             </div>
         </footer>
     </div>
 </div>
 
-<div class="row">
-    <img  id="live-image" src="" alt="">
-</div>
+
 <!--   Core JS Files   -->
 <script src="js/jquery.min.js"></script>
 <script src="js/popper.min.js"></script>
@@ -493,83 +501,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
 <!-- Chartist JS -->
 <script src="js/chartist.min.js"></script>
-
-<script>
-
-    // For buttons interactions
-    var states = {
-        hs100: 0,
-        radio: 0,
-        light: 0
-    };
-
-    function makeServerRequest(type, state, cb) {
-        return new Promise(function (resolve, reject) {
-            setTimeout(() => {
-                try {
-                    fetch('http://localhost:5555/api/v1/service/' + type + '/' + state).then(data => data.json()).then(d => cb(d));
-                } catch (e) {
-                    reject(e);
-                }
-                resolve();
-            }, 200)
-
-        })
-
-    }
-
-    function changeButtonToOff(id) {
-        document.getElementById(id).className = 'touch-button touch-button-primary';
-        document.querySelector('#' + id + ' .touch-button-inner i').className = 'fa fa-power-off';
-        states[id] = 1;
-    }
-
-    function changeButtonToOn(id) {
-        document.getElementById(id).className = 'touch-button touch-button-success';
-        document.querySelector('#' + id + ' .touch-button-inner i').className = 'fa fa-play-circle-o';
-        states[id] = 0;
-    }
-
-    function changeButtonToPause(id) {
-        document.getElementById(id).className = 'touch-button touch-button-warning';
-        document.querySelector('#' + id + ' .touch-button-inner i').className = 'fa fa-pause-circle-o';
-    }
-
-    document.getElementById('hs100').addEventListener('click', e => {
-        e.preventDefault();
-        changeButtonToPause('hs100')
-        makeServerRequest('hs100', states.hs100 === 0 ? 1 : 0, (data) => {
-            console.log(data);
-            window.data = data;
-            Number(data.state) === 1 ? changeButtonToOff('hs100') : changeButtonToOn('hs100');
-            console.log(data)
-        });
-    });
-
-    document.getElementById('light').addEventListener('click', e => {
-        e.preventDefault();
-        changeButtonToPause('light')
-        makeServerRequest('light', states.light === 0 ? 1 : 0, (data) => {
-            Number(data.state) === 1 ? changeButtonToOff('light') : changeButtonToOn('light');
-            console.log(data)
-        });
-    });
-
-    document.getElementById('radio').addEventListener('click', e => {
-        e.preventDefault();
-        changeButtonToPause('radio')
-        makeServerRequest('radio', states.radio === 0 ? 1 : 0, (data) => {
-            Number(data.state) === 1 ? changeButtonToOff('radio') : changeButtonToOn('radio');
-            console.log(data)
-        });
-    });
-
-    /*setInterval(() => {
-        document.getElementById('light').click();
-    }, 3000) */
-</script>
-
 <script src="js/show_sensor_data.js"></script>
+<script src="js/smart_buttons.js.js"></script>
 
 <script>
     const socket = io.connect('http://localhost:5555');

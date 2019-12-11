@@ -17,8 +17,8 @@ app.use(
 const http = require('http').Server(app);
 const io = socket(http);
 const wCap = new cv.VideoCapture(0);
-wCap.set(cv.CAP_PROP_FRAME_HEIGHT, 200);
-wCap.set(cv.CAP_PROP_FRAME_WIDTH, 200);
+wCap.set(cv.CAP_PROP_FRAME_HEIGHT, 100);
+wCap.set(cv.CAP_PROP_FRAME_WIDTH, 100);
 
 const FPS = 15;
 
