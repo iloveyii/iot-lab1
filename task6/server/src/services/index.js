@@ -10,7 +10,6 @@ function onTemperatureData(temperature) {
     // console.log('Temperature sensor: ' + temperature);
     data.temperature = temperature;
     data._id && delete data['_id'];
-    console.log(JSON.stringify(data));
     insertIntoMongo(data);
     const usersRef = ref.push();
     usersRef.set(data);

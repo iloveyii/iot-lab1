@@ -7,7 +7,7 @@ const Hs100Api = require('hs100-api');
 const {startRadio, stopRadio} = require('./radio');
 
 const HS100_IP = '192.168.230.204';
-const INTERVAL = 1000;
+const INTERVAL = 1500;
 
 
 class MyThingy {
@@ -27,6 +27,7 @@ class MyThingy {
         this._disableSensors = this._disableSensors.bind(this);
 
         this._onButtonChange = this._onButtonChange.bind(this);
+        this.startCameraService = this.startSensors.bind(this);
 
         this.thingy = null;
         this.startSensorsStatus = false;
@@ -104,8 +105,9 @@ class MyThingy {
         })
     }
 
-    async startSensors() {
+    async startSensors(cb) {
         const self = this;
+        self.cb = cb;
         return new Promise(function (resolve, reject) {
             if (!self.isSetThingy()) return resolve(true);
             self.startSensorsStatus = true;
@@ -118,11 +120,13 @@ class MyThingy {
     _onButtonChange(state) {
         if (state === 'Pressed') {
             if (this.startSensorsStatus === true) {
+                this.cb(true);
                 this.startSensorsStatus = false;
                 this._disableSensors();
                 this.switchLight(0).then(()=>console.log('Disabled sensors data'));
             } else {
                 this.startSensorsStatus = true;
+                this.cb(false);
                 this._enableSensors();
                 this.switchLight(1).then(()=>console.log('Enabled sensors data'));
             }
@@ -132,7 +136,7 @@ class MyThingy {
     _onTemperatureData(temperature) {
         this.data.temperature = temperature;
         this.data._id && delete this.data['_id'];
-        console.log(JSON.stringify(this.data));
+        // console.log(JSON.stringify(this.data));
         insertIntoMongo(this.data);
 
         if (this.data.eco2) {
@@ -277,6 +281,13 @@ class MyThingy {
 
         this.thingy.stepCounter_disable(function (error) {
             console.log('Step counter sensor disabled ' + error ? error : '');
+        });
+    }
+
+    async startCameraService() {
+        const self = this;
+        return new Promise(function (resolve, reject) {
+
         });
     }
 }

@@ -31,8 +31,6 @@ function insertIntoMongo(d) {
                 reject(err);
                 console.log(err);
             } else {
-                console.log('Data inserted into mongo');
-                console.log();
                 d = {};
                 resolve(d);
             }

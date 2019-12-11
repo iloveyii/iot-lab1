@@ -1,12 +1,13 @@
 // Import required packages
 const path = require('path');
-// const MyThingy = require('./src/iot');
+const MyThingy = require('./src/iot');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const socket = require('socket.io');
 const cv = require('opencv4nodejs');
+const CAMERA_ENABLED = 1;
 
 app.use(
     express.static(__dirname + '/public'),
@@ -16,11 +17,12 @@ app.use(
 );
 const http = require('http').Server(app);
 const io = socket(http);
-const wCap = new cv.VideoCapture(0);
-wCap.set(cv.CAP_PROP_FRAME_HEIGHT, 100);
-wCap.set(cv.CAP_PROP_FRAME_WIDTH, 100);
 
-const FPS = 15;
+if (CAMERA_ENABLED) {
+    var wCap = new cv.VideoCapture(0);
+    wCap.set(cv.CAP_PROP_FRAME_HEIGHT, 100);
+    wCap.set(cv.CAP_PROP_FRAME_WIDTH, 100);
+}
 
 let mt;
 
@@ -76,53 +78,66 @@ app.get('/api/v1/service/:name/:state', async (req, res) => {
     const {name, state} = req.params;
     console.log(req.params, name, state);
     let result;
-    if(mt === null) return res.json({state: 0});
+    if (mt === null) return res.json({state: 0});
 
     switch (name) {
         case 'hs100':
             result = await mt.switchHs100(state);
             return res.json({state: result});
-            break;
         case 'radio':
             result = await mt.switchRadio(state);
             return res.json({state: result});
-            break;
         case 'light':
             console.log('Inside switch light', state)
             result = await mt.switchLight(state);
             return res.json({state: result});
-            break;
     }
 });
 
 app.get('/', (req, res) => {
-    res.sendFile( path.join(__dirname, 'public/index.html'));
+    res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-setInterval(() => {
-    const frame = wCap.read();
-    const image = cv.imencode('.jpg', frame).toString('base64');
-    io.emit('image', image);
-}, 1000 / FPS);
+
+var cameraStatus = 0;
+
+const getDataUpdates = (data) => {
+    console.log('getDataUpdates');
+    var cameraHandle = 0;
+    const FPS = 15;
+
+    if (data) {
+        cameraStatus = 1;
+        cameraHandle = setInterval(() => {
+            const frame = wCap.read();
+            const image = cv.imencode('.jpg', frame).toString('base64');
+            io.emit('image', image);
+        }, 2000 / FPS);
+        console.log('Started camera', cameraHandle);
+    } else {
+        clearInterval(cameraHandle);
+        cameraStatus = 0;
+        console.log('Stopped camera', cameraHandle);
+    }
+};
 
 
-/*
 function startServices() {
     return new Promise((resolve, reject) => {
-        mt.startSensors().then(()=>resolve(mt.uuid));
+        mt.startSensors(getDataUpdates).then(() => resolve(mt.uuid));
     });
 }
 
 function connectThingy() {
     return new Promise((resolve, reject) => {
         console.log('Connecting to thingy');
-        mt  = new MyThingy();
-        mt.connect().then((thingy)=>resolve(thingy))
+        mt = new MyThingy();
+        mt.connect().then((thingy) => resolve(thingy))
     });
 }
 
-connectThingy().then((thingy)=>startServices(thingy).then((status)=>console.log('ThingyStatus : ' + status)));
-*/
+connectThingy().then((thingy) => startServices(thingy).then((status) => console.log('ThingyStatus : ' + status)));
+
 http.listen(5555, () => console.log('Server started on port ' + 5555));
 
 
