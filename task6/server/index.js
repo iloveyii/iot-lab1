@@ -106,7 +106,7 @@ const getDataUpdates = (data) => {
     var cameraHandle = 0;
     const FPS = 15;
 
-    if (data) {
+    if (data && cameraStatus === 0) {
         cameraStatus = 1;
         cameraHandle = setInterval(() => {
             const frame = wCap.read();
@@ -129,15 +129,16 @@ function startServices() {
 }
 
 function connectThingy() {
+    console.log('Connecting to thingy22');
+
     return new Promise((resolve, reject) => {
-        console.log('Connecting to thingy');
+
         mt = new MyThingy();
         mt.connect().then((thingy) => resolve(thingy))
     });
 }
 
 connectThingy().then((thingy) => startServices(thingy).then((status) => console.log('ThingyStatus : ' + status)));
-
 http.listen(5555, () => console.log('Server started on port ' + 5555));
 
 

@@ -35,8 +35,9 @@ class MyThingy {
     }
 
     connect() {
+        const _this = this;
         return new Promise((resolve, reject) => {
-            Thingy.discover((thingy) => this.onDiscover(thingy, resolve));
+            Thingy.discover((thingy) => _this.onDiscover(thingy, resolve));
         });
     }
 
