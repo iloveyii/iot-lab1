@@ -16,13 +16,8 @@ app.use(
     cors()
 );
 const http = require('http').Server(app);
-const io = socket(http);
 
-if (CAMERA_ENABLED) {
-    var wCap = new cv.VideoCapture(0);
-    wCap.set(cv.CAP_PROP_FRAME_HEIGHT, 100);
-    wCap.set(cv.CAP_PROP_FRAME_WIDTH, 100);
-}
+
 
 let mt;
 
@@ -100,24 +95,44 @@ app.get('/', (req, res) => {
 
 
 var cameraStatus = 0;
+var cameraHandle = 0;
+let io, wCap, myIo = null;
+
+io = socket(http);
+wCap = new cv.VideoCapture(0);
+wCap.set(cv.CAP_PROP_FRAME_HEIGHT, 100);
+wCap.set(cv.CAP_PROP_FRAME_WIDTH, 100);
+
+function startCamera() {
+    myIo = io;
+}
+
+function stopCamera() {
+    myIo = { emit : () => null};
+}
+const FPS = 20;
+
+startCamera();
+cameraHandle = setInterval(() => {
+    const frame = wCap.read();
+    const image = cv.imencode('.jpg', frame).toString('base64');
+    myIo.emit('image', image);
+}, 1000 / FPS);
+console.log('Started camera');
 
 const getDataUpdates = (data) => {
     console.log('getDataUpdates');
-    var cameraHandle = 0;
-    const FPS = 15;
 
     if (data && cameraStatus === 0) {
         cameraStatus = 1;
-        cameraHandle = setInterval(() => {
-            const frame = wCap.read();
-            const image = cv.imencode('.jpg', frame).toString('base64');
-            io.emit('image', image);
-        }, 2000 / FPS);
-        console.log('Started camera', cameraHandle);
+        console.log('Started camera');
+        startCamera();
+
     } else {
-        clearInterval(cameraHandle);
+        // clearInterval(cameraHandle);
         cameraStatus = 0;
-        console.log('Stopped camera', cameraHandle);
+        console.log('Stopped camera');
+        stopCamera();
     }
 };
 
@@ -137,6 +152,14 @@ function connectThingy() {
         mt.connect().then((thingy) => resolve(thingy))
     });
 }
+
+// simulate
+setInterval(() => {
+    console.log('inside set interval')
+    getDataUpdates(!cameraStatus);
+}, 4000);
+
+
 
 connectThingy().then((thingy) => startServices(thingy).then((status) => console.log('ThingyStatus : ' + status)));
 http.listen(5555, () => console.log('Server started on port ' + 5555));
