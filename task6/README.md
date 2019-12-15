@@ -40,3 +40,4 @@ network={
 
 ### Issues and solution
    * To set the display resolution `nano /boot/config.txt`, and set `hdmi_mode	16`.
+   * node no perm - run npm with flag --unsafe-perm
