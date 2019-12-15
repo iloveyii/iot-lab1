@@ -1,6 +1,6 @@
 // Import required packages
-import insertIntoMongo from './services/mongo';
-import insertIntoFirebase from './services/firebase';
+import insertIntoMongo from './mongo';
+import insertIntoFirebase from './firebase';
 
 const Thingy = require('thingy52');
 const Hs100Api = require('hs100-api');
@@ -8,6 +8,7 @@ const {startRadio, stopRadio} = require('./radio');
 
 const HS100_IP = '192.168.230.204';
 const INTERVAL = 1500;
+const DISCOVERY_TIMEOUT = 5000;
 
 
 class MyThingy {
@@ -27,17 +28,62 @@ class MyThingy {
         this._disableSensors = this._disableSensors.bind(this);
 
         this._onButtonChange = this._onButtonChange.bind(this);
-        this.startCameraService = this.startSensors.bind(this);
 
         this.thingy = null;
         this.startSensorsStatus = false;
         this.data = {};
+        this.startSimulation = this.startSimulation.bind(this);
+        this.random = this.random.bind(this);
+    }
+
+    startSimulation() {
+        console.log('Thingy simulation mode is ON');
+        const simThingy = {
+            startSensors: () => new Promise((resolve, reject) => resolve(true)),
+            _onButtonChange: () => null,
+            switchLight: (state) => new Promise((resolve, reject) => resolve(state)),
+        };
+
+        setInterval(() => {
+            let data = {
+                eco2: this.random(300, 1500),
+                tvoc: this.random(10, 20),
+                color: {
+                    "red": this.random(1, 255),
+                    "green": this.random(1, 255),
+                    "blue": this.random(1, 255),
+                    "clear": this.random(1, 255)
+                },
+                heading: this.random(1, 365),
+                temperature: this.random(15, 40),
+                humidity: this.random(20, 40),
+                pressure: this.random(500, 1500),
+            };
+            insertIntoFirebase(data);
+        }, INTERVAL);
+
+        return simThingy;
+    }
+
+
+    random(min, max, decimal = 0) {
+        let r = Math.random() * (max - min + 1) + min;
+        if (decimal === 0) {
+            r = Math.floor(r);
+        }
+        return r;
     }
 
     connect() {
         const _this = this;
         return new Promise((resolve, reject) => {
             Thingy.discover((thingy) => _this.onDiscover(thingy, resolve));
+            setTimeout(() => {
+                if (this.thingy === null) {
+                    const simThingy = this.startSimulation();
+                    resolve(simThingy);
+                }
+            }, DISCOVERY_TIMEOUT)
         });
     }
 
@@ -99,7 +145,7 @@ class MyThingy {
                 lightplug.getInfo().then(console.log);
                 lightplug.setPowerState(Number(state) === 1 ? true : false);
                 resolve(state);
-            } catch(e) {
+            } catch (e) {
                 console.log('Error in connection');
                 resolve(0);
             }
@@ -124,12 +170,12 @@ class MyThingy {
                 this.cb(true);
                 this.startSensorsStatus = false;
                 this._disableSensors();
-                this.switchLight(0).then(()=>console.log('Disabled sensors data'));
+                this.switchLight(0).then(() => console.log('Disabled sensors data'));
             } else {
                 this.startSensorsStatus = true;
                 this.cb(false);
                 this._enableSensors();
-                this.switchLight(1).then(()=>console.log('Enabled sensors data'));
+                this.switchLight(1).then(() => console.log('Enabled sensors data'));
             }
         }
     }
@@ -282,13 +328,6 @@ class MyThingy {
 
         this.thingy.stepCounter_disable(function (error) {
             console.log('Step counter sensor disabled ' + error ? error : '');
-        });
-    }
-
-    async startCameraService() {
-        const self = this;
-        return new Promise(function (resolve, reject) {
-
         });
     }
 }

@@ -1,6 +1,6 @@
 // Import required packages
 const path = require('path');
-const MyThingy = require('./src/iot');
+const MyThingy = require('./src/services/MyThingy');
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -8,7 +8,6 @@ const cors = require('cors');
 
 const mongoDb = require('./src/services/mongo');
 const camera = require('./src/services/camera');
-const CAMERA_ENABLED = 1;
 
 app.use(
     express.static(__dirname + '/public'),
@@ -47,7 +46,9 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-
+function getDataUpdates(data) {
+    console.log(data);
+}
 
 function startServices() {
     return new Promise((resolve, reject) => {
