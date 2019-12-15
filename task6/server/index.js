@@ -16,10 +16,13 @@ app.use(
     cors()
 );
 const http = require('http').Server(app);
+
 let mt;
+const TEMPERATURE_THRESHOLD = 22;
+const RECORD_TIME = 5000;
 
 app.get('/api/v1/data', async (req, res) => {
-     await mongoDb.read().then(data => res.json(data));
+    await mongoDb.read().then(data => res.json(data));
 });
 
 app.get('/api/v1/service/:name/:state', async (req, res) => {
@@ -45,9 +48,20 @@ app.get('/api/v1/service/:name/:state', async (req, res) => {
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
+let cameraStarted = 0;
+camera.startHardwareOnce(http);
 
 function getDataUpdates(data) {
-    console.log(data);
+    console.log(data.temperature);
+    if ((data.temperature < TEMPERATURE_THRESHOLD) && (cameraStarted === 0)) {
+        camera.start();
+        cameraStarted = 1;
+        setTimeout(() => {
+            console.log('Stopped camera - bcz of record time out ', RECORD_TIME);
+            camera.stop();
+            cameraStarted = 0;
+        }, RECORD_TIME)
+    }
 }
 
 function startServices() {
@@ -68,7 +82,6 @@ function connectThingy() {
 
 connectThingy().then((thingy) => startServices(thingy).then((status) => console.log('ThingyStatus : ' + status)));
 
-camera.start(http);
 
 http.listen(5555, () => console.log('Server started on port ' + 5555));
 

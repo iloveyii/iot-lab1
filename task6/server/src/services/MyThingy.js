@@ -38,8 +38,12 @@ class MyThingy {
 
     startSimulation() {
         console.log('Thingy simulation mode is ON');
+        const self = this;
         const simThingy = {
-            startSensors: () => new Promise((resolve, reject) => resolve('simulation')),
+            startSensors: (cb) => new Promise((resolve, reject) => {
+                this.cb = cb;
+                resolve('simulation');
+            }),
             _onButtonChange: () => null,
             switchLight: async (state) => {
                 console.log('In simThingy state : ', state);
@@ -64,6 +68,7 @@ class MyThingy {
                 pressure: this.random(500, 1500),
             };
             insertIntoFirebase(data);
+            this.cb(data);
         }, INTERVAL);
 
         return simThingy;
@@ -109,7 +114,7 @@ class MyThingy {
     async switchLight(state) {
         const self = this;
         return new Promise(function (resolve, reject) {
-            if(self.uuid === 'simulation') return resolve(state);
+            if (self.uuid === 'simulation') return resolve(state);
             if (!self.isSetThingy()) return resolve(false);
             const led = {
                 r: 255,
@@ -135,7 +140,7 @@ class MyThingy {
     async switchRadio(state) {
         const self = this;
         return new Promise(function (resolve, reject) {
-            if(self.uuid === 'simulation') return resolve(state);
+            if (self.uuid === 'simulation') return resolve(state);
             if (!self.isSetThingy()) return resolve(false);
             Number(state) === 1 ? startRadio(self.thingy) : stopRadio(self.thingy);
             resolve(state);
@@ -145,7 +150,7 @@ class MyThingy {
     async switchHs100(state) {
         const self = this;
         return new Promise(function (resolve, reject) {
-            try{
+            try {
                 const client = new Hs100Api.Client();
                 const lightplug = client.getPlug({host: HS100_IP});
                 // lightplug.getInfo().then(console.log);
@@ -153,7 +158,7 @@ class MyThingy {
                 resolve(state);
             } catch (e) {
                 console.log('Error in connection');
-                if(self.uuid === 'simulation') return resolve(state);
+                if (self.uuid === 'simulation') return resolve(state);
                 resolve(0);
             }
         })

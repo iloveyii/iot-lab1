@@ -8,52 +8,31 @@ var io, wCap, myIo = null;
 wCap = new cv.VideoCapture(0);
 wCap.set(cv.CAP_PROP_FRAME_HEIGHT, 100);
 wCap.set(cv.CAP_PROP_FRAME_WIDTH, 100);
+const FPS = 5;
 
-function startCamera() {
-    myIo = io;
-}
-
-function stopCamera() {
-    myIo = {emit: () => null};
-}
-
-const FPS = 20;
-
-startCamera();
-cameraHandle = setInterval(() => {
-    const frame = wCap.read();
-    const image = cv.imencode('.jpg', frame).toString('base64');
-    myIo.emit('image', image);
-}, 1000 / FPS);
-console.log('Started camera');
-
-
-const getDataUpdates = (data) => {
-    console.log('getDataUpdates');
-
-    if (data && cameraStatus === 0) {
-        cameraStatus = 1;
-        console.log('Started camera');
-        startCamera();
-
-    } else {
-        // clearInterval(cameraHandle);
-        cameraStatus = 0;
-        console.log('Stopped camera');
-        stopCamera();
-    }
-};
-
-function start(http) {
-    io = socket(http);
-    myIo = io;
-    // simulate
+function startHardwareOnce(http) {
+    myIo = socket(http);
     setInterval(() => {
-        console.log('inside set interval')
-        getDataUpdates(!cameraStatus);
-    }, 40000);
+        const frame = wCap.read();
+        const image = cv.imencode('.jpg', frame).toString('base64');
+        if (myIo && myIo.emit) {
+            myIo.emit('image', cameraStatus === 1 ? image : 'NA');
+        }
+        console.log('Camera interval', cameraStatus);
+    }, 1000 / FPS);
+    console.log('Started camera - startHardwareOnce');
+}
+
+function stop() {
+    cameraStatus = 0;
+}
+
+function start() {
+    cameraStatus = 1;
 }
 
 module.exports = {
-    start : start.bind(this)
+    start: start.bind(this),
+    stop: stop.bind(this),
+    startHardwareOnce: startHardwareOnce.bind(this)
 };
