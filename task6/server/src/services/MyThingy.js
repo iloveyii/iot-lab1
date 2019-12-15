@@ -7,7 +7,7 @@ const Hs100Api = require('hs100-api');
 const {startRadio, stopRadio} = require('./radio');
 
 const HS100_IP = '192.168.230.204';
-const INTERVAL = 1500;
+const INTERVAL = 2500;
 const DISCOVERY_TIMEOUT = 5000;
 
 
@@ -39,10 +39,14 @@ class MyThingy {
     startSimulation() {
         console.log('Thingy simulation mode is ON');
         const simThingy = {
-            startSensors: () => new Promise((resolve, reject) => resolve(true)),
+            startSensors: () => new Promise((resolve, reject) => resolve('simulation')),
             _onButtonChange: () => null,
-            switchLight: (state) => new Promise((resolve, reject) => resolve(state)),
+            switchLight: async (state) => {
+                console.log('In simThingy state : ', state);
+                return new Promise((resolve, reject) => resolve(state));
+            },
         };
+        this.uuid = 'simulation';
 
         setInterval(() => {
             let data = {
@@ -98,13 +102,14 @@ class MyThingy {
 
     isSetThingy() {
         if (this.thingy) return true;
-        console.log('Discovering thing, please wait ...');
-        Thingy.discover(this.onDiscover);
+        // console.log('Discovering thing, please wait ...');
+        // Thingy.discover(this.onDiscover);
     }
 
     async switchLight(state) {
         const self = this;
         return new Promise(function (resolve, reject) {
+            if(self.uuid === 'simulation') return resolve(state);
             if (!self.isSetThingy()) return resolve(false);
             const led = {
                 r: 255,
@@ -130,6 +135,7 @@ class MyThingy {
     async switchRadio(state) {
         const self = this;
         return new Promise(function (resolve, reject) {
+            if(self.uuid === 'simulation') return resolve(state);
             if (!self.isSetThingy()) return resolve(false);
             Number(state) === 1 ? startRadio(self.thingy) : stopRadio(self.thingy);
             resolve(state);
@@ -139,14 +145,15 @@ class MyThingy {
     async switchHs100(state) {
         const self = this;
         return new Promise(function (resolve, reject) {
-            try {
+            try{
                 const client = new Hs100Api.Client();
                 const lightplug = client.getPlug({host: HS100_IP});
-                lightplug.getInfo().then(console.log);
+                // lightplug.getInfo().then(console.log);
                 lightplug.setPowerState(Number(state) === 1 ? true : false);
                 resolve(state);
             } catch (e) {
                 console.log('Error in connection');
+                if(self.uuid === 'simulation') return resolve(state);
                 resolve(0);
             }
         })
