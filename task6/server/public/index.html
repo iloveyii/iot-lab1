@@ -469,7 +469,7 @@
                                         <img id="live-image" src="" alt="Live video">
                                     </td>
                                     <td>
-                                        <span id="live-image-timer"></span>
+                                        <span id="live-image-status"></span>
                                     </td>
                                 </tr>
                             </div>
@@ -514,12 +514,14 @@
 <script>
     const socket = io.connect('http://localhost:5555');
     socket.on('image', image => {
-        if(image && (image.length > 20)) {
+        if (image && (image.length > 20)) {
             const liveImage = document.getElementById('live-image');
             liveImage.src = `data:image/jpeg;base64,${image}`;
         } else {
             // console.log('Image length is less than 20 ' . image.length)
         }
+        const status = document.getElementById('live-image-status');
+        status.innerHTML = image === 'NA' ? 'Stopped' : 'Streaming...' + Math.floor((((new Date).getTime()/1000)%3600)%20);
     });
 
 </script>

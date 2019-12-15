@@ -27,6 +27,7 @@
     "mongodb": "^3.3.5",
     "opencv4nodejs": "5.5.0",
     "socket.io": "^2.3.0",
+    "string-similarity": "^3.0.0",
     "thingy52": "^1.0.4"
   },
   "devDependencies": {

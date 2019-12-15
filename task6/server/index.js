@@ -18,8 +18,8 @@ app.use(
 const http = require('http').Server(app);
 
 let mt;
-const TEMPERATURE_THRESHOLD = 22;
-const RECORD_TIME = 5000;
+const TEMPERATURE_THRESHOLD = 28;
+const RECORD_TIME = 105000;
 
 app.get('/api/v1/data', async (req, res) => {
     await mongoDb.read().then(data => res.json(data));
@@ -49,10 +49,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 let cameraStarted = 0;
-camera.startHardwareOnce(http);
+camera.startHardwareOnce(http, () => console.log('There was some motion'));
 
 function getDataUpdates(data) {
-    console.log(data.temperature);
+    // console.log(data.temperature);
     if ((data.temperature < TEMPERATURE_THRESHOLD) && (cameraStarted === 0)) {
         camera.start();
         cameraStarted = 1;
