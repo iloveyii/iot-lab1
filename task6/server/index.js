@@ -19,7 +19,7 @@ const http = require('http').Server(app);
 
 let mt;
 const TEMPERATURE_THRESHOLD = 28;
-const RECORD_TIME = 105000;
+const RECORD_TIME = 5000;
 
 app.get('/api/v1/data', async (req, res) => {
     await mongoDb.read().then(data => res.json(data));

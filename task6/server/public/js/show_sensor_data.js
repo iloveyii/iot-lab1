@@ -54,8 +54,6 @@ function displayData(data) {
     drawChart('pressure', dataToShow);
 
     // ['temperature', 'pressure', 'eco2', 'humidity', 'tvoc', 'heading', 'rotation', 'color'].forEach(id => showHistoricData(historicData, id))
-
-
 }
 
 function showHistoricData(hData, id) {
