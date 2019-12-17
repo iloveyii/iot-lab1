@@ -1,7 +1,7 @@
 var data = {};
 var historicData = [];
-// Your web app's Firebase configuration
-const firebaseConfig = {
+// Your web app's Firebase configuration - ALI
+const firebaseConfig2 = {
     apiKey: "AIzaSyAD2NGFLbN8DiwjuAknJ8veLSN4LG50VjY",
     authDomain: "iot-sensors-data.firebaseapp.com",
     databaseURL: "https://iot-sensors-data.firebaseio.com",
@@ -11,6 +11,17 @@ const firebaseConfig = {
     appId: "1:469619601022:web:d410d8a49049c46f41322f",
     measurementId: "G-55BF16R4Z9"
 };
+// Your web app's Firebase configuration - REACT
+var firebaseConfig = {
+    apiKey: "AIzaSyAzKwB5AcIED54V4toqf5Icvn6Cx5GhgIc",
+    authDomain: "hkr-iot-lab1.firebaseapp.com",
+    databaseURL: "https://hkr-iot-lab1.firebaseio.com",
+    projectId: "hkr-iot-lab1",
+    storageBucket: "hkr-iot-lab1.appspot.com",
+    messagingSenderId: "689144959624",
+    appId: "1:689144959624:web:9571d87e2e5cd41298853d"
+};
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
