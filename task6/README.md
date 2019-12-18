@@ -32,11 +32,18 @@ network={
   * If you want to use latest npm `npm install npm@latest -g`
   
      
-### VNC Server
-  * Run `sudo raspi-config` and then choose Interfacing Options, enable VNC.
-  * Connect from a VNC client from your computer.
+### Firebase config
+  * Create a google account (google.com)
+  * Goto firebase console (https://console.firebase.google.com)
+  * Add a project
+  * Goto Project Overview and click Add app, select web (<>) and then follow the instructions.
+  * From the above step you will get web app credentials.
+  * To integrate with node js you need to install firebase-admin package
+  * Goto Project settings ( gear icon)  > Service accounts and then click Generate new key, download it.
+  * Now goto Real-time database and click ellipses (...) and then 'create new database'
 
 
 
 ### Issues and solution
-   * To set the display resolution `nano /boot/config.txt`, and set `hdmi_mode	16`.
+   * The web app may not read the data initially from the realtime database
+   * To fix it click Develop > Database > Real time database > Rules > then change read, write to 'true', then click publish.
