@@ -1,0 +1,19 @@
+
+> raspi-soft-pwm@5.1.1 preinstall /home/pi/projects/iot-lab1/task5/server/iot/node_modules/raspi-soft-pwm
+> sh ./script/pigpio.sh
+
+pigpio is already installed, skipping installation
+
+> raspi-pwm@6.0.0 preinstall /home/pi/projects/iot-lab1/task5/server/iot/node_modules/raspi-pwm
+> sh ./script/pigpio.sh
+
+pigpio is already installed, skipping installation
+
+> raspi-gpio@6.2.2 preinstall /home/pi/projects/iot-lab1/task5/server/iot/node_modules/raspi-gpio
+> sh ./script/pigpio.sh
+
+pigpio is already installed, skipping installation
+
+> i2c-bus@5.1.0 install /home/pi/projects/iot-lab1/task5/server/iot/node_modules/i2c-bus
+> node-gyp rebuild
+

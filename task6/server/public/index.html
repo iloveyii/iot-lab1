@@ -505,7 +505,7 @@
 <script src="js/smart_buttons.js"></script>
 
 <script>
-    const socket = io.connect('http://localhost:5555');
+    const socket = io.connect('http://192.168.0.107:5555');
     socket.on('image', image => {
         const liveImage = document.getElementById('live-image');
         liveImage.src = `data:image/jpeg;base64,${image}`;

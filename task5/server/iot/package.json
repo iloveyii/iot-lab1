@@ -1,5 +1,5 @@
 {
-  "name": "thingy52",
+  "name": "lab-thingy52",
   "version": "1.0.4",
   "description": "Nordic Thingy:52 Node.js library example. Please see http://www.nordicsemi.com/thingy for the latest Nordic Thingy:52 news and software releases.",
   "main": "index.js",
@@ -10,12 +10,14 @@
     "dredd": "^5.2.0",
     "hs100-api": "^0.19.1",
     "johnny-five": "^1.0.0",
+    "mongodb": "^3.4.0",
     "noble-device": "^1.4.1",
     "pi-camera": "^1.2.1",
     "pi-pir-sensor": "0.0.3",
     "pir": "^0.2.0",
     "raspi-io": "^9.0.0",
-    "tessel": "^0.3.25"
+    "tessel": "^0.3.25",
+    "thingy52": "^1.0.4"
   },
   "devDependencies": {},
   "scripts": {
