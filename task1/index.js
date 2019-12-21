@@ -4,7 +4,7 @@ var Hs100Api = require('hs100-api');
 var enabled;
 var HS100_IP = '192.168.230.204';
 
-console.log('TASK 01 - started');
+console.log('TASK 1 - started');
 
 function switchOnOfHs100(status) {
     return true;
@@ -25,12 +25,12 @@ function onButtonChange(state) {
         }
 
         var led = {
-            r : 255,
-            g : 10,
-            b : 10
+            r: 255,
+            g: 10,
+            b: 10
         };
 
-        if(enabled) {
+        if (enabled) {
             led.r = 0;
             led.g = 255;
         } else {
@@ -38,8 +38,8 @@ function onButtonChange(state) {
             led.g = 0;
         }
 
-        this.led_set(led, function() {
-            console.log( enabled ? 'enabled' : 'disabled');
+        simT.led_set(led, function () {
+            console.log(enabled ? 'Plug switched ON' : 'Plug switched OFF');
         });
     }
 }
@@ -51,16 +51,27 @@ function onDiscover(thingy) {
     });
 
     thingy.connectAndSetUp(function (error) {
-        console.log('Connected! ' + error);
+        console.log('Connected! ' + error ? error : '');
         thingy.on('buttonNotif', onButtonChange);
-        thingy.button_enable(function(error) {
-            // console.log('Button enabled! ' + error);
+        thingy.button_enable(function (error) {
+            console.log('Button press enabled! ' + error ? error : '');
         });
         enabled = true;
     });
 }
 
+var simT = {
+    on: () => null,
+    connectAndSetUp: () => null,
+    button_enable: () => null,
+    led_set: (led, cb) => cb()
+};
 
 Thingy.discover(onDiscover);
+onDiscover(simT);
+
+
+onButtonChange.bind(simT);
+onButtonChange('Pressed');
 
 
