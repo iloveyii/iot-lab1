@@ -5,12 +5,15 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
+require('dotenv').config(
+    {path: path.resolve(process.cwd(), './.env')}
+);
 
 const mongoDb = require('./src/services/mongo');
 const camera = require('./src/services/camera');
 
 app.use(
-    express.static(__dirname + '/public'),
+    express.static(__dirname + '/src/public'),
     bodyParser.urlencoded({extended: true}),
     bodyParser.json(),
     cors()
@@ -18,7 +21,7 @@ app.use(
 const http = require('http').Server(app);
 
 let mt;
-const TEMPERATURE_THRESHOLD = 26;
+const TEMPERATURE_THRESHOLD = 39;
 const RECORD_TIME = 5000;
 
 app.get('/api/v1/data', async (req, res) => {
