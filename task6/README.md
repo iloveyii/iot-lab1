@@ -47,3 +47,17 @@ network={
 ### Issues and solution
    * The web app may not read the data initially from the realtime database
    * To fix it click Develop > Database > Real time database > Rules > then change read, write to 'true', then click publish.
+
+### Install Code OSS on PI
+   * `wget https://packagecloud.io/headmelted/codebuilds/gpgkey`
+   * `sudo apt-key add gpgkey`
+   * `sudo -s`
+   * `. <( wget -O - https://code.headmelted.com/installers/apt.sh )`
+   * `apt-get install code-oss=1.29.0-1539702286`
+   * This rolls back to an earlier version. This does mean if you run apt-get update at a later date the latest version will be installed, breaking it again. To stop this happening, you can lock the version using:
+     
+     `apt-mark hold code-oss`
+     Once a fix has been released, you can remove the version lock with:
+     
+     `apt-mark unhold code-oss`
+   

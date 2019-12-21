@@ -147,6 +147,23 @@ class MyThingy {
         });
     }
 
+    async switchNetio(state) {
+        const self = this;
+        return new Promise(function (resolve, reject) {
+            if (self.uuid === 'simulation') return resolve(state);
+            if (!self.isSetThingy()) return resolve(false);
+
+            try {
+                fetch('https://194.47.34.210:4444/xml')
+                    .then(response => response.text())
+                    .then(str => (new window.DOMParser()).parseFromString(str, "text/xml"))
+                    .then(data => console.log(data))
+            } catch (e) {
+                reject(e);
+            }
+        });
+    }
+
     async switchHs100(state) {
         const self = this;
         return new Promise(function (resolve, reject) {
@@ -196,7 +213,7 @@ class MyThingy {
         this.data.temperature = temperature;
         this.data._id && delete this.data['_id'];
         // console.log(JSON.stringify(this.data));
-        insertIntoMongo(this.data);
+        // insertIntoMongo(this.data);
 
         if (this.data.eco2) {
             insertIntoFirebase(this.data);

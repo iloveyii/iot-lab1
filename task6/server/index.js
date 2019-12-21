@@ -18,7 +18,7 @@ app.use(
 const http = require('http').Server(app);
 
 let mt;
-const TEMPERATURE_THRESHOLD = 28;
+const TEMPERATURE_THRESHOLD = 26;
 const RECORD_TIME = 5000;
 
 app.get('/api/v1/data', async (req, res) => {
@@ -41,6 +41,10 @@ app.get('/api/v1/service/:name/:state', async (req, res) => {
         case 'light':
             console.log('Inside switch light', state)
             result = await mt.switchLight(state);
+            return res.json({state: result});
+        case 'netio4':
+            console.log('Inside netio4 smart plug', state)
+            result = await mt.switchNetio(state);
             return res.json({state: result});
     }
 });
