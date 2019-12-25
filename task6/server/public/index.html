@@ -16,9 +16,9 @@
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <!-- CSS Files -->
-    <link href="css/material-dashboard.css?v=2.1.1" rel="stylesheet"/>
+    <link href="/css/material-dashboard.css?v=2.1.1" rel="stylesheet"/>
     <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link href="css/button.css" rel="stylesheet"/>
+    <link href="/css/button.css" rel="stylesheet"/>
 
     <script src="https://www.gstatic.com/firebasejs/7.5.2/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"
@@ -33,9 +33,6 @@
                 <div class="col-md-12">
                     <div class="py-5 text-center">
                         <img class="d-block mx-auto mb-4" src="images/iot.png" alt="" width="140" height="98">
-                        <h2>Sensor data - Task 5</h2>
-                        <p class="lead">Reading data sensor data from Nordic Thingy52 and showing in real time using
-                            firebase</p>
                     </div>
                 </div>
             </div>
@@ -502,17 +499,17 @@
 
 
 <!--   Core JS Files   -->
-<script src="js/jquery.min.js"></script>
-<script src="js/popper.min.js"></script>
-<script src="js/bootstrap-material-design.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap-material-design.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
 <!-- Chartist JS -->
-<script src="js/chartist.min.js"></script>
-<script src="js/show_sensor_data.js"></script>
-<script src="js/smart_buttons.js"></script>
+<script src="/js/chartist.min.js"></script>
+<script src="/js/show_sensor_data.js"></script>
+<script src="/js/smart_buttons.js"></script>
 
 <script>
-    const socket = io.connect('http://192.168.0.107:5555');
+    const socket = io.connect('http://10.42.0.169:5555');
     socket.on('image', image => {
         if (image && (image.length > 20)) {
             const liveImage = document.getElementById('live-image');

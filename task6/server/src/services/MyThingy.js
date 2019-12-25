@@ -7,7 +7,7 @@ const Hs100Api = require('hs100-api');
 const {startRadio, stopRadio} = require('./radio');
 
 const HS100_IP = '192.168.230.204';
-const INTERVAL = 2500; // Fetching data from thingy or simulation interval
+const INTERVAL = 25000; // Fetching data from thingy or simulation interval
 const DISCOVERY_TIMEOUT = 5000;
 
 

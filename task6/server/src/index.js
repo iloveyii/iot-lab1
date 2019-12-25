@@ -8,9 +8,9 @@ const cors = require('cors');
 
 const mongoDb = require('./services/mongo');
 const camera = require('./services/camera');
-
+console.log(__dirname + '/../public');
 app.use(
-    express.static(__dirname + '/public'),
+    express.static(__dirname + '/../public'),
     bodyParser.urlencoded({extended: true}),
     bodyParser.json(),
     cors()
@@ -18,8 +18,8 @@ app.use(
 const http = require('http').Server(app);
 
 let mt;
-const TEMPERATURE_THRESHOLD = 28;
-const RECORD_TIME = 5000;
+const TEMPERATURE_THRESHOLD = 38;
+const RECORD_TIME = 15000;
 
 app.get('/api/v1/data', async (req, res) => {
     await mongoDb.read().then(data => res.json(data));
@@ -46,7 +46,7 @@ app.get('/api/v1/service/:name/:state', async (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 let cameraStarted = 0;
 camera.startHardwareOnce(http, () => console.log('There was some motion'));
@@ -84,7 +84,3 @@ connectThingy().then((thingy) => startServices(thingy).then((status) => console.
 
 
 http.listen(5555, () => console.log('Server started on port ' + 5555));
-
-
-
-
