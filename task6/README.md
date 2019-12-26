@@ -2,6 +2,7 @@ TASK 2
 =====================================
 In this task we use IFTTT to send a sensor event to a remote device (Netio4). IFTTT (If This Then That) is a free web service which triggers different services based on events. For Example if a user tweets then send an email. 
 
+![DEMO](https://github.com/iloveyii/iot-lab1/blob/demo/task2/images/demo1.gif)
 
 ## Implementation
 
