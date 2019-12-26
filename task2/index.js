@@ -15,6 +15,6 @@ app.get("/api/v1/netio/:status", (req, res) => {
     });
 });
 
-const listener = app.listen(5555, function() {
+const listener = app.listen(80, function() {
     console.log("Your app is listening on port " + listener.address().port);
 });
