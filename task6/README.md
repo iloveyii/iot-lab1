@@ -3,7 +3,7 @@ IoT Lab 01 - Task 6
 
 In this task we implement a trigger, for example if temperature ( sensor data from thingy) goes below 22, then a video clip should be taken and shown on the web page, and also switch on a smart plug.
 
-![Screenshot](https://github.com/iloveyii/iot-lab1/blob/demo/task6/public/images/screenshot1.png)
+![Screenshot](https://github.com/iloveyii/iot-lab1/blob/demo/task6/src/public/images/screenshot1.png)
 
 
 ## Implementation
