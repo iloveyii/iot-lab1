@@ -1,42 +1,18 @@
-PI Installations
+IoT Lab 01 - Task 3
 =====================================
 
+In this task we are supposed to develop a Node JS server on Raspberry PI (3), fetch the sensor data from Nordich Thingy 52 and then display it on a web page.
 
-I installed the following for IoT lab.
+![DEMO](https://github.com/iloveyii/iot-lab1/blob/demo/task1/images/demo1.gif)
 
-## Installations
-### OS
-  * Download Raspbian Buster with Desktop from `https://www.raspberrypi.org/downloads/raspbian/`.
-  * Extract the image from the above step and write to SD card using Ubuntu Image Writer or Etcher.
-  * In the boot partition of SD card `touch ssh` to enable ssh.
-  * Auto connect to wifi, nano `/etc/wpa_supplicant/wpa_supplicant.conf` and add the following at the end
+
+## Implementation
+  * We developed a web server using node and express. We wrote a class MyThingy which reads all sensor data from thingy. We then make ajax calls from our web page to show that data periodically.
+
+## Run
 ```bash
-network={
-   ssid="your-wifi"
-   psk="your-wifi-password"
-}
-``` 
-  * Eject SD card from computer and place in PI, power up PI.
-  * To ssh to PI you need to find IP and may scan network by using `nmap -sP 192.168.0.0/24` or whatever is your network.
-  * ssh pi@192.168.0.11, assuming this is your ip, default username is pi and password is raspberry. Change it by `sudo passwd pi`'
-  * Install required packages `sudo apt install bluetooth bluez libbluetooth-dev libbluetooth-dev libudev-dev`
-  
-  
-### Node
-  * Install Node Version Manager (NVM)
-    `curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash`
-  * Source profile
-    `source ~/.bashrc`
-  * Install node v8 `nvm install 8`
-  * Set as default `nvm use 8` 
-  * If you want to use latest npm `npm install npm@latest -g`
-  
-     
-### VNC Server
-  * Run `sudo raspi-config` and then choose Interfacing Options, enable VNC.
-  * Connect from a VNC client from your computer.
+cd task3
+npm i
+npm start
 
-
-
-### Issues and solution
-   * To set the display resolution `nano /boot/config.txt`, and set `hdmi_mode	16`.
+```

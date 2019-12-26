@@ -1,3 +1,4 @@
+
 // Import required packages
 const MyThingy = require('./src/iot');
 const express = require('express');

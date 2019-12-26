@@ -1,6 +1,5 @@
 // Import required packages
 import insertIntoMongo from './services/mongo';
-import insertIntoFirebase from './services/firebase';
 
 const Thingy = require('thingy52');
 const Hs100Api = require('hs100-api');
@@ -136,7 +135,7 @@ class MyThingy {
         insertIntoMongo(this.data);
 
         if (this.data.eco2) {
-            insertIntoFirebase(this.data);
+            insertIntoMongo(this.data);
         }
     }
 

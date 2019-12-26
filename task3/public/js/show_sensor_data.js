@@ -4,7 +4,7 @@ function readData(cb) {
     let sensor_data;
     fetch('http://localhost:5555/api/v1/data')
         .then(resp => resp.json())
-        .then(d => cb(d));
+        .then(d => cb(d.slice(0,8)));
 }
 
 readData((d) => {
