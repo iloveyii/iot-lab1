@@ -3,7 +3,7 @@ IOT Lab 01 - Task 1
 
 Turn on/off a smart plug wirelessly – A taste of IoT
 
-![DEMO]()
+![DEMO](https://github.com/iloveyii/iot-lab1/blob/demo/task1/images/demo1.gif)
 ## Description
 Using the button at the Nordic Thingy52 to turn on/off a HS100 smart
 plug.
