@@ -3,7 +3,7 @@ IoT Lab 01 - Task 3
 
 In this task we extend the task 3. We need now add a few buttons to command and control a few sensor devices (HS100, Thingy52).
 
-![Screenshot](https://github.com/iloveyii/iot-lab1/blob/demo/task3/public/images/screenshot1.png)
+![Screenshot](https://github.com/iloveyii/iot-lab1/blob/demo/task4/public/images/screenshot1.png)
 
 
 ## Implementation
